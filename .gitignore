@@ -1,0 +1,6 @@
+build/*
+modifications.txt
+.vscode/settings.json
+data/conversion_*.txt
+data/**
+doc/**

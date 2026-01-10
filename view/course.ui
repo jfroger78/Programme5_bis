@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Course</class>
+ <widget class="QWidget" name="Course">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1660</width>
+    <height>1232</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="m_raceLayout">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetNoConstraint</enum>
+   </property>
+   <item row="0" column="1">
+    <widget class="QPushButton" name="m_clear">
+     <property name="text">
+      <string>Clear</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QPushButton" name="m_start">
+     <property name="text">
+      <string>Start</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLineEdit" name="m_nbre1"/>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLineEdit" name="m_nbre2"/>
+   </item>
+   <item row="1" column="2">
+    <widget class="QLineEdit" name="m_nbre3"/>
+   </item>
+   <item row="1" column="3">
+    <widget class="QLineEdit" name="m_nbre4"/>
+   </item>
+   <item row="1" column="4">
+    <widget class="QLineEdit" name="m_nbre5"/>
+   </item>
+   <item row="1" column="5">
+    <widget class="QLineEdit" name="m_nbre6"/>
+   </item>
+   <item row="1" column="6">
+    <widget class="QLineEdit" name="m_nbre7"/>
+   </item>
+   <item row="1" column="7">
+    <widget class="QLineEdit" name="m_nbre8"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="m_nbrePartantLabel">
+     <property name="text">
+      <string>Nombre Partant:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLineEdit" name="m_nbrePartant"/>
+   </item>
+   <item row="2" column="2">
+    <widget class="QLabel" name="m_disciplineLabel">
+     <property name="text">
+      <string>Discipline:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QLineEdit" name="m_discipline"/>
+   </item>
+   <item row="2" column="4">
+    <widget class="QLabel" name="m_distanceLabel">
+     <property name="text">
+      <string>Distance:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="5">
+    <widget class="QLineEdit" name="m_distance"/>
+   </item>
+   <item row="2" column="6">
+    <widget class="QLabel" name="m_winnerLabel">
+     <property name="text">
+      <string>Gagnant:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="7">
+    <widget class="QLineEdit" name="m_winner"/>
+   </item>
+   <item row="3" column="6">
+    <widget class="QLabel" name="m_place1Label">
+     <property name="text">
+      <string>Place 1:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="7">
+    <widget class="QLineEdit" name="m_place1"/>
+   </item>
+   <item row="4" column="6">
+    <widget class="QLabel" name="m_place2Label">
+     <property name="text">
+      <string>Place 2:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="7">
+    <widget class="QLineEdit" name="m_place2"/>
+   </item>
+   <item row="5" column="0" colspan="8">
+    <widget class="QGroupBox" name="m_filterGroupBox">
+     <property name="title">
+      <string>Filtres</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="8">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Distance</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Jaune</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QLineEdit" name="m_nbrLeaverMin"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="m_letterMin"/>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Nombre de partant</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Discipline</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="5">
+       <widget class="QLineEdit" name="m_yellowStrict"/>
+      </item>
+      <item row="2" column="6">
+       <widget class="QLineEdit" name="m_yellowMin"/>
+      </item>
+      <item row="2" column="8">
+       <widget class="QLineEdit" name="m_distanceFilter"/>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLineEdit" name="m_nbrLeaverStrict"/>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="m_letterStrict"/>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="m_filterNbr1"/>
+      </item>
+      <item row="4" column="2">
+       <widget class="QLineEdit" name="m_filterNbr2"/>
+      </item>
+      <item row="4" column="3">
+       <widget class="QLineEdit" name="m_filterNbr3"/>
+      </item>
+      <item row="4" column="4">
+       <widget class="QLineEdit" name="m_filterNbr4"/>
+      </item>
+      <item row="4" column="5">
+       <widget class="QLineEdit" name="m_filterNbr5"/>
+      </item>
+      <item row="4" column="6">
+       <widget class="QLineEdit" name="m_filterNbr6"/>
+      </item>
+      <item row="4" column="7">
+       <widget class="QLineEdit" name="m_filterNbr7"/>
+      </item>
+      <item row="4" column="8">
+       <widget class="QLineEdit" name="m_filterNbr8"/>
+      </item>
+      <item row="0" column="5">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Jaune strict</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Strict</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Strict</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Numéro</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="6" column="0" colspan="8">
+    <widget class="QGroupBox" name="m_resultats">
+     <property name="title">
+      <string>Resultats</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="2" colspan="2">
+       <widget class="QGroupBox" name="m_en3Group">
+        <property name="title">
+         <string>En 3</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_7">
+         <item row="0" column="0">
+          <widget class="QTableView" name="m_en3">
+           <property name="minimumSize">
+            <size>
+             <width>420</width>
+             <height>300</height>
+            </size>
+           </property>
+           <property name="sizeAdjustPolicy">
+            <enum>QAbstractScrollArea::AdjustToContents</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="0" column="4" colspan="2">
+       <widget class="QGroupBox" name="m_en2en3Group">
+        <property name="title">
+         <string>En 2 + En 3</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_8">
+         <item row="0" column="0">
+          <widget class="QTableView" name="m_en2En3">
+           <property name="minimumSize">
+            <size>
+             <width>420</width>
+             <height>300</height>
+            </size>
+           </property>
+           <property name="sizeAdjustPolicy">
+            <enum>QAbstractScrollArea::AdjustToContents</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="2">
+       <widget class="QGroupBox" name="m_en2Group">
+        <property name="title">
+         <string>En 2</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_6">
+         <item row="0" column="0">
+          <widget class="QTableView" name="m_en2">
+           <property name="minimumSize">
+            <size>
+             <width>420</width>
+             <height>300</height>
+            </size>
+           </property>
+           <property name="sizeAdjustPolicy">
+            <enum>QAbstractScrollArea::AdjustToContents</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="6">
+       <widget class="QGroupBox" name="m_BDDCombination">
+        <property name="title">
+         <string>BDD combinaison</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_5">
+         <item row="0" column="0">
+          <widget class="QTableView" name="m_combination">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>100</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QCheckBox" name="m_combFilter">
+     <property name="text">
+      <string>Filtrer par combinaison</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
