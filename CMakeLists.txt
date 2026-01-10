@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(Programme_cinco)
+project(Programme_cinco_bis)
 
 # Recherche Qt5
 find_package(Qt5 REQUIRED COMPONENTS Widgets Core Sql REQUIRED)
@@ -24,10 +24,10 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 # Création de l'exécutable
-add_executable(Programme_cinco ${SOURCES} ${HEADERS} ${UI_HEADERS})
+add_executable(Programme_cinco_bis ${SOURCES} ${HEADERS} ${UI_HEADERS})
 
 # Ajout des dossiers d'include (racine + sous-dossiers)
-target_include_directories(Programme_cinco PRIVATE
+target_include_directories(Programme_cinco_bis PRIVATE
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/model
     ${CMAKE_SOURCE_DIR}/controller
@@ -35,4 +35,4 @@ target_include_directories(Programme_cinco PRIVATE
 )
 
 # Lier Qt5 à ton projet
-target_link_libraries(Programme_cinco Qt5::Widgets Qt5::Core Qt5::Sql)
+target_link_libraries(Programme_cinco_bis Qt5::Widgets Qt5::Core Qt5::Sql)

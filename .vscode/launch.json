@@ -5,7 +5,7 @@
             "name": "Debug Qt App",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Programme_cinco",
+            "program": "${workspaceFolder}/build/Programme_cinco_bis",
             "cwd": "${workspaceFolder}",
             "MIMode": "gdb",
             "preLaunchTask": "Rebuild Project"
