@@ -288,3 +288,38 @@ const bool RaceData::filtered(const ERowArrayValue& p_filter, const CompareValue
     }
     return false;
 }
+
+//----------------------------------------------------
+const bool RaceData::colorInColumn(const QString p_color, const int p_column) const
+//----------------------------------------------------
+{
+    std::array<std::array<en2En3Struct, 16>, 9> searchingArray;
+    int correctedColIndex;
+    if(8 > p_column)
+    {
+        correctedColIndex = p_column;
+        searchingArray = en2;
+    }
+    else if((8 <= p_column) && (16 > p_column))
+    {
+        correctedColIndex = p_column - 8;
+        searchingArray = en3;
+    }
+    else
+    {
+        correctedColIndex = p_column - 16;
+        searchingArray = en2En3;
+    }
+
+    correctedColIndex = colIndexes[correctedColIndex];
+    for(int rowIndex = 0; rowIndex < 8; rowIndex++)
+    {
+        if(0 == searchingArray[rowIndex][correctedColIndex].color.compare(p_color, Qt::CaseInsensitive))
+        {
+            qDebug() << "Searched color:" << p_color << " =" << searchingArray[rowIndex][correctedColIndex].color;
+            return true;
+        }
+    }
+
+    return false;
+}

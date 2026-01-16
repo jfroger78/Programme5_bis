@@ -83,7 +83,7 @@ namespace view
         rowHeaders.push_back("O");
         setPercent(rowIndex,
                    p_datasToDisplay.arrayCircle,
-                   p_datasToDisplay.totalDatas,
+                   p_datasToDisplay.total,
                    statModel);
         rowIndex++;
 
@@ -99,7 +99,7 @@ namespace view
         rowHeaders.push_back("Vert");
         setPercent(rowIndex,
                    p_datasToDisplay.arrayGreen,
-                   p_datasToDisplay.totalDatas,
+                   p_datasToDisplay.totalGreen,
                    statModel);
         rowIndex++;
 
@@ -115,7 +115,7 @@ namespace view
         rowHeaders.push_back("Bleu");
         setPercent(rowIndex,
                    p_datasToDisplay.arrayBlue,
-                   p_datasToDisplay.totalDatas,
+                   p_datasToDisplay.totalBlue,
                    statModel);
         rowIndex++;
 
@@ -123,7 +123,7 @@ namespace view
         rowHeaders.push_back("Jaune");
         setPercent(rowIndex,
                    p_datasToDisplay.arrayYellow,
-                   p_datasToDisplay.totalDatas,
+                   p_datasToDisplay.totalYellow,
                    statModel);
         rowIndex++;
 
@@ -131,7 +131,7 @@ namespace view
         rowHeaders.push_back("Orange");
         setPercent(rowIndex,
                    p_datasToDisplay.arrayOrange,
-                   p_datasToDisplay.totalDatas,
+                   p_datasToDisplay.totalOrange,
                    statModel);
         rowIndex++;
 
@@ -139,7 +139,7 @@ namespace view
         rowHeaders.push_back("Blanc");
         setPercent(rowIndex,
                    p_datasToDisplay.arrayBlank,
-                   p_datasToDisplay.totalDatas,
+                   p_datasToDisplay.totalBlank,
                    statModel);
         
         statModel->setVerticalHeaderLabels(rowHeaders);
@@ -192,6 +192,11 @@ namespace view
     {
         if(0 == p_total)
         {
+            for(size_t colIndex = 0; colIndex < p_percents.size(); ++colIndex)
+            {
+                QStandardItem* percentItem = new QStandardItem("0");
+                p_model->setItem(p_rowIndex, colIndex, percentItem);
+            }
             return;
         }
 
@@ -214,11 +219,15 @@ namespace view
         {
             const float percent = p_percents[colIndex];
             const float total = p_totals[colIndex];
+            QStandardItem* percentItem = nullptr;
             if(0 == total)
             {
-                continue; // Skip if one is at zero
+                percentItem = new QStandardItem("0");
             }
-            QStandardItem* percentItem = new QStandardItem(QString::number((percent / total) * 100, 'f', 2));
+            else
+            {
+                percentItem = new QStandardItem(QString::number((percent / total) * 100, 'f', 2));
+            }
             p_model->setItem(p_rowIndex, colIndex, percentItem);
         }
     }

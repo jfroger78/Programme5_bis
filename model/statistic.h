@@ -6,13 +6,22 @@
 
 struct StatisticsData
 {
+    // Value
     std::array<int, 24> arrayCircle = {};
     std::array<int, 24> arrayGreen = {};
     std::array<int, 24> arrayBlue = {};
     std::array<int, 24> arrayYellow = {};
     std::array<int, 24> arrayOrange = {};
     std::array<int, 24> arrayBlank = {};
-    int totalDatas = 0; // Total of datas.
+    
+    // Totals
+    int total;
+    std::array<int, 24> totalGreen = {};
+    std::array<int, 24> totalBlue = {};
+    std::array<int, 24> totalYellow = {};
+    std::array<int, 24> totalOrange = {};
+    std::array<int, 24> totalBlank = {};
+
 
     // Data to compute V gagnant
     std::array<int, 24> arrayGreenWinner = {};

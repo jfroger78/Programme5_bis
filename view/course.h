@@ -257,6 +257,7 @@ namespace view {
         {
             return m_totalRow;
         }
+
     private:
         /**
          * @brief Connects the user interface elements to their respective slots

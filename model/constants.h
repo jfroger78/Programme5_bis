@@ -205,6 +205,14 @@ struct RaceData
      * @return True if the value passes the filter, false otherwise.
      */
     const bool filtered(const ERowArrayValue& p_filter, const CompareValue& p_value) const;
+
+    /**
+     * @brief Check if the input color exist in the input column.
+     * @param p_color: The color to search.
+     * @param p_column: The column index in which search.
+     * @return True if the color is find, false otherwise.
+     */
+    const bool colorInColumn(const QString p_color, const int p_column) const;
 };
 
 struct en2En3Array

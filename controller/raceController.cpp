@@ -80,7 +80,6 @@ namespace controller {
 
             m_statLPJArrayController->setFullDatas(fullCombinationBDDDatas);
             m_statLPJArrayController->setCurrentRaceDatas(totalUsed);
-
             m_statLPJArrayController->onStartFilter(convertFilter(filter));
             if(!m_statLPJArrayController->isChangeFilterConnected())
             {
@@ -95,7 +94,6 @@ namespace controller {
 
             m_statLPDArrayController->setFullDatas(fullCombinationBDDDatas);
             m_statLPDArrayController->setCurrentRaceDatas(totalUsed);
-
             m_statLPDArrayController->onStartFilter(convertFilter(filter));
             if(!m_statLPDArrayController->isChangeFilterConnected())
             {

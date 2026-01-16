@@ -231,38 +231,83 @@ namespace controller
     //--------------------------------------------------------------------------------
     {
         StatisticsData result;
-        result.totalDatas = p_filteredDatas.size();
+        result.total = p_filteredDatas.size();
         for(const RaceData& data: p_filteredDatas)
         {
             for(int indexRow = 0; indexRow < static_cast<int>(UnknownRowArray); ++indexRow)
             {
                 for(int indexCol = 0; indexCol < 24; ++indexCol)
                 {
-                    if(data.isPassFilter(indexRow, indexCol))
+                    switch(indexRow)
                     {
-                        switch(indexRow)
-                        {
-                            case CircleArray:
+                        case CircleArray:
+                            if(data.isPassFilter(indexRow, indexCol))
+                            {
                                 result.arrayCircle[indexCol]++;
-                                break;
-                            case GreenArray:
-                                result.arrayGreen[indexCol]++;
-                                break;
-                            case BlueArray:
-                                result.arrayBlue[indexCol]++;
-                                break;
-                            case YellowArray:
-                                result.arrayYellow[indexCol]++;
-                                break;
-                            case OrangeArray:
-                                result.arrayOrange[indexCol]++;
-                                break;
-                            case BlankArray:
-                                result.arrayBlank[indexCol]++;
-                                break;
-                            default:
-                                break;
+                            }
+                            break;
+                        case GreenArray:
+                        {
+                            if(data.colorInColumn("Green", indexCol))
+                            {
+                                result.totalGreen[indexCol]++;
+                                if(data.isPassFilter(indexRow, indexCol))
+                                {
+                                    result.arrayGreen[indexCol]++;
+                                }
+                          }
+                          break;
                         }
+                        case BlueArray:
+                        {
+                            if(data.colorInColumn("Blue", indexCol))
+                            {
+                                result.totalBlue[indexCol]++;
+                                if(data.isPassFilter(indexRow, indexCol))
+                                {
+                                    result.arrayBlue[indexCol]++;
+                                }
+                            }
+                            break;
+                        }
+                        case YellowArray:
+                        {
+                            if(data.colorInColumn("Yellow", indexCol))
+                            {
+                                result.totalYellow[indexCol]++;
+                                if(data.isPassFilter(indexRow, indexCol))
+                                {
+                                    result.arrayYellow[indexCol]++;
+                                }
+                            }
+                            break;
+                        }
+                        case OrangeArray:
+                        {
+                            if(data.colorInColumn("Orange", indexCol))
+                            {
+                                result.totalOrange[indexCol]++;
+                                if(data.isPassFilter(indexRow, indexCol))
+                                {
+                                    result.arrayOrange[indexCol]++;
+                                }
+                            }
+                            break;
+                        }
+                        case BlankArray:
+                        {
+                            if(data.colorInColumn("Blank", indexCol))
+                            {
+                                result.totalBlank[indexCol]++;
+                                if(data.isPassFilter(indexRow, indexCol))
+                                {
+                                    result.arrayBlank[indexCol]++;
+                                }
+                            }
+                            break;
+                        }
+                        default:
+                            break;
                     }
                 }
             }
