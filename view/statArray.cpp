@@ -57,7 +57,16 @@ namespace view
     void StatArray::displayDatas(const StatisticsData& p_datasToDisplay)
     //-------------------------------------------
     {
-        m_ui->m_total->setText(QString::number(p_datasToDisplay.totalDatas));
+        QItemSelectionModel* oldItemSelection = m_ui->m_statDatas->selectionModel();
+        QList<QPair<int, int>> selectedCells;
+        if(nullptr != oldItemSelection)
+        {
+            for(const QModelIndex& index: oldItemSelection->selectedIndexes())
+            {
+                selectedCells.append(QPair<int, int>(index.row(), index.column()));
+            }
+        }
+        m_ui->m_total->setText(QString::number(p_datasToDisplay.total));
 
         const QStringList columnHeaders = {"P", "3", " ", "4", " ", "N", "T", "T",
                                      "P", "3", " ", "4", " ", "N", "T", "T",
@@ -136,6 +145,18 @@ namespace view
         statModel->setVerticalHeaderLabels(rowHeaders);
         m_ui->m_statDatas->setModel(statModel);
         m_ui->m_statDatas->resizeColumnsToContents();
+
+        QItemSelectionModel* newItemSelection = m_ui->m_statDatas->selectionModel();
+        for(const QPair<int, int>& cell: selectedCells)
+        {
+            const int row = cell.first;
+            const int column = cell.second;
+            if((row < statModel->rowCount()) && (column < statModel->columnCount()))
+            {
+                QModelIndex index = statModel->index(row, column);
+                newItemSelection->select(index, QItemSelectionModel::Select);
+            }
+        }
     }
 
     //-------------------------------------------
