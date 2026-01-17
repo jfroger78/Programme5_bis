@@ -123,10 +123,8 @@ std::string Tools::convertColorToString(const EColor& p_color)
             return "Yellow";
         case EColor::OrangeColor:
             return "Orange";
-        case EColor::BlankColor:
-            return "Blank";
         default:
-            return "None";
+            return "Blank";
     }
 }
 
@@ -176,12 +174,8 @@ std::string Tools::convertColor(const std::string p_color)
     {
         return "Orange";
     }
-    else if(BLANK_COLOR == p_color)
-    {
-        return "Blank";
-    }
 
-    return "None";
+    return "Blank";
 }
 
 //------------------------------------------------------------------------------

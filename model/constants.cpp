@@ -316,7 +316,6 @@ const bool RaceData::colorInColumn(const QString p_color, const int p_column) co
     {
         if(0 == searchingArray[rowIndex][correctedColIndex].color.compare(p_color, Qt::CaseInsensitive))
         {
-            qDebug() << "Searched color:" << p_color << " =" << searchingArray[rowIndex][correctedColIndex].color;
             return true;
         }
     }

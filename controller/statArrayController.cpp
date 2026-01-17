@@ -296,7 +296,7 @@ namespace controller
                         }
                         case BlankArray:
                         {
-                            if(data.colorInColumn("Blank", indexCol))
+                            if(data.colorInColumn("Blank", indexCol) || data.colorInColumn("None", indexCol))
                             {
                                 result.totalBlank[indexCol]++;
                                 if(data.isPassFilter(indexRow, indexCol))
