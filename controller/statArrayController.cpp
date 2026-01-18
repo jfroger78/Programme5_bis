@@ -198,7 +198,6 @@ namespace controller
                            data.distance))
             {
                 result.push_back(data);
-                const std::array<CompareValue, 24> current = data.convertValue();
             }
         }
 

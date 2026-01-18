@@ -177,12 +177,13 @@ const std::array<int, 24> RaceData::totalDatas() const
 }
 
 //----------------------------------------------------
-const std::array<CompareValue, 24> RaceData::convertValue() const
+const std::array<CompareValue, 24> RaceData::convertValue(bool& p_isConverted) const
 //----------------------------------------------------
 {
     const int rowIndex = winnerRow();
     if(-1 == rowIndex)
     {
+        p_isConverted = false;
         return {};
     }
 
@@ -214,6 +215,7 @@ const std::array<CompareValue, 24> RaceData::convertValue() const
         ++index;
     }
 
+    p_isConverted = true;
     return result;
 }
 
@@ -260,8 +262,9 @@ const bool RaceData::isPassFilter(const int p_row, const int p_column) const
 //----------------------------------------------------
 {
     ERowArrayValue filter = static_cast<ERowArrayValue>(p_row);
-    const std::array<CompareValue, 24> datas = convertValue();
-    return filtered(filter, datas[p_column]);
+    bool isConverted = false;
+    const std::array<CompareValue, 24> datas = convertValue(isConverted);
+    return ((true == isConverted) ? filtered(filter, datas[p_column]) : false);
 }
 
 //----------------------------------------------------

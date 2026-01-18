@@ -178,9 +178,10 @@ struct RaceData
 
     /**
      * @brief Convert winner datas to O and X symbol.
+     * @param p_isConverted: True of the conversion is well done, false otherwise.
      * @return The winner row converted in O and X.
      */
-    const std::array<CompareValue, 24> convertValue() const;
+    const std::array<CompareValue, 24> convertValue(bool& p_isConverted) const;
 
     /**
      * @brief Convert a value in O and X.
