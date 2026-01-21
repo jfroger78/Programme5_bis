@@ -49,7 +49,7 @@ public:
      * @brief Returns the displayBDD HMI.
      * @return A ref to the displayBDD HMI.
      */
-    DisplayBDD& displayBDD()
+    view::DisplayBDD& displayBDD()
     {
         return m_displayBDD;
     }
@@ -87,7 +87,7 @@ private:
     Ui::Programme_cinco *m_ui; //!< Pointer to the user interface.
     std::array<view::Course*, 20> m_courses; //!< Array to store courses.
     FillBDD m_fillBDD; //!< Instance of FillBDD controller.
-    DisplayBDD m_displayBDD; //!< Instance of the displayBDD HMI.
+    view::DisplayBDD m_displayBDD; //!< Instance of the displayBDD HMI.
 };
 
 #endif // PROGRAMME_CINCO_H

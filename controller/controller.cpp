@@ -68,7 +68,7 @@ Controller* Controller::m_instance = nullptr;
         connection();
         m_programme.show();
 
-        DisplayBDD displayBDD;
+        view::DisplayBDD displayBDD;
     }
 
     //--------------------------------

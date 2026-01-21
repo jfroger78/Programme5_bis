@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="1" column="0" colspan="2">
+   <item row="2" column="0" colspan="2">
     <widget class="QGroupBox" name="m_courses">
      <property name="title">
       <string>Courses</string>
@@ -31,7 +31,7 @@
            <x>0</x>
            <y>0</y>
            <width>987</width>
-           <height>565</height>
+           <height>420</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
@@ -47,6 +47,9 @@
      </layout>
     </widget>
    </item>
+   <item row="0" column="1">
+    <widget class="QComboBox" name="m_combinationList"/>
+   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="m_combLabel">
      <property name="text">
@@ -54,8 +57,74 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="QComboBox" name="m_combinationList"/>
+   <item row="1" column="0" colspan="2">
+    <widget class="QGroupBox" name="m_filter">
+     <property name="title">
+      <string>Filtre</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="m_disciplineStrict"/>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="m_nbrLeaver">
+        <property name="text">
+         <string>Nombre de partant</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="m_strict">
+        <property name="text">
+         <string>Strict:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="m_discipline">
+        <property name="text">
+         <string>Discipline</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLineEdit" name="m_distanceStrict"/>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLineEdit" name="m_nbrLeaverMin"/>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLineEdit" name="m_nbrLeaverStrict"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="m_minimum">
+        <property name="text">
+         <string>Minimum:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="m_disciplineMin"/>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="m_distance">
+        <property name="text">
+         <string>Distance</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QLineEdit" name="m_distanceMin"/>
+      </item>
+      <item row="0" column="0">
+       <widget class="QPushButton" name="m_start">
+        <property name="text">
+         <string>start</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
   </layout>
  </widget>
