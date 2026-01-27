@@ -1,6 +1,7 @@
 // Custom includes
 #include "statArray.h"
 #include "ui_statArray.h"
+#include "model/constants.h"
 
 // Qt includes
 #include <QStandardItemModel>
@@ -143,6 +144,7 @@ namespace view
                    statModel);
         
         statModel->setVerticalHeaderLabels(rowHeaders);
+        getLittleOne(*statModel);
         m_ui->m_statDatas->setModel(statModel);
         m_ui->m_statDatas->resizeColumnsToContents();
 
@@ -229,6 +231,45 @@ namespace view
                 percentItem = new QStandardItem(QString::number((percent / total) * 100, 'f', 2));
             }
             p_model->setItem(p_rowIndex, colIndex, percentItem);
+        }
+    }
+
+    //-------------------------------------------
+    void StatArray::getLittleOne(QStandardItemModel& p_model)
+    //-------------------------------------------
+    {
+        bool isFind = false;
+        for(size_t rowIndex = 0; rowIndex < p_model.rowCount(); ++rowIndex)
+        {
+            std::vector<int> colValue = {0};
+            float littlePercent = 101.0;
+            isFind = false;
+            for(size_t colIndex = 0; colIndex < p_model.columnCount(); ++colIndex)
+            {
+                if(nullptr != p_model.item(rowIndex, colIndex))
+                {
+                    const float currentValue = p_model.item(rowIndex, colIndex)->text().toFloat();
+                    if(littlePercent > currentValue)
+                    {
+                        colValue.clear();
+                        littlePercent = currentValue;
+                        colValue.push_back(colIndex);
+                        isFind = true;
+                    }
+                    else if(littlePercent == currentValue)
+                    {
+                        colValue.push_back(colIndex);
+                    }
+                }
+            }
+            
+            if(true == isFind)
+            {
+                for(const int col: colValue)
+                {
+                    p_model.item(rowIndex, col)->setBackground(QBrush(QColor(QString::fromStdString(YELLOW_COLOR))));
+                }
+            }
         }
     }
     

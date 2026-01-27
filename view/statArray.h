@@ -102,6 +102,12 @@ namespace view
                             const std::array<int, 24>& p_percents,
                             const std::array<int, 24>& p_totals,
                             QStandardItemModel* p_model);
+
+            /**
+             * @brief Gets the little percent in each row of the model
+             * @param p_model: The model to parse.
+             */
+            void getLittleOne(QStandardItemModel& p_model);
         private:
             Ui::StatArray *m_ui; //!< Pointer to the HMI.
 
