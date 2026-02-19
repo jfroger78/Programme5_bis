@@ -11,11 +11,11 @@
 static uint8_t const MIN_HORSE_NUMBER = 1; //!< Minimum horse number.
 static uint8_t const MAX_HORSE_NUMBER = 18; //!< Maximum horse number.
 
-static std::string const GREEN_COLOR = "#81d41a"; //!< Green color in hex format.
-static std::string const BLUE_COLOR = "#3365a4"; //!< Blue color in hex format.
-static std::string const YELLOW_COLOR = "#ffff00"; //!< Yellow color in hex format.
-static std::string const ORANGE_COLOR = "#ff8d39"; //!< Orange color in hex format.
-static std::string const BLANK_COLOR = "#ffffff"; //!< Blank color in hex format.
+static QString const GREEN_COLOR = "#81d41a"; //!< Green color in hex format.
+static QString const BLUE_COLOR = "#3365a4"; //!< Blue color in hex format.
+static QString const YELLOW_COLOR = "#ffff00"; //!< Yellow color in hex format.
+static QString const ORANGE_COLOR = "#ff8d39"; //!< Orange color in hex format.
+static QString const BLANK_COLOR = "#ffffff"; //!< Blank color in hex format.
 
 const std::array<int, 8> colIndexes = {5, 6, 7, 8, 9, 10, 4, 14};
 

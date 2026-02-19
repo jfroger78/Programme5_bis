@@ -104,20 +104,20 @@ QBrush BDDCourseData::convertColorName(const QString& p_colorName)
 {
     if(0 == p_colorName.compare("green", Qt::CaseInsensitive))
     {
-        return QBrush(QColor(QString::fromStdString(GREEN_COLOR)));
+        return QBrush(QColor(GREEN_COLOR));
     }
     else if(0 == p_colorName.compare("blue", Qt::CaseInsensitive))
     {
-        return QBrush(QColor(QString::fromStdString(BLUE_COLOR)));
+        return QBrush(QColor(BLUE_COLOR));
     }
     else if(0 == p_colorName.compare("yellow", Qt::CaseInsensitive))
     {
-        return QBrush(QColor(QString::fromStdString(YELLOW_COLOR)));
+        return QBrush(QColor(YELLOW_COLOR));
     }
     else if(0 == p_colorName.compare("orange", Qt::CaseInsensitive))
     {
-        return QBrush(QColor(QString::fromStdString(ORANGE_COLOR)));
+        return QBrush(QColor(ORANGE_COLOR));
     }
 
-    return QBrush(QColor(QString::fromStdString(BLANK_COLOR)));
+    return QBrush(QColor(BLANK_COLOR));
 }

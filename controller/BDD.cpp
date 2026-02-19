@@ -335,23 +335,23 @@ bool BDD::formatArrayDatas(const QAbstractItemModel* p_array,
 EColor BDD::convertToColor(const QColor& p_color)
 //-----------------------------------------------------------------------------
 {
-    if(GREEN_COLOR == p_color.name().toStdString())
+    if(0 == p_color.name().compare(GREEN_COLOR, Qt::CaseInsensitive))
     {
         return EColor::GreenColor;
     }
-    else if(BLUE_COLOR == p_color.name().toStdString())
+    else if(0 == p_color.name().compare(BLUE_COLOR, Qt::CaseInsensitive))
     {
         return EColor::BlueColor;
     }
-    else if(YELLOW_COLOR == p_color.name().toStdString())
+    else if(0 == p_color.name().compare(YELLOW_COLOR, Qt::CaseInsensitive))
     {
         return EColor::YellowColor;
     }
-    else if(ORANGE_COLOR == p_color.name().toStdString())
+    else if(0 == p_color.name().compare(ORANGE_COLOR, Qt::CaseInsensitive))
     {
         return EColor::OrangeColor;
     }
-    else if(BLANK_COLOR == p_color.name().toStdString())
+    else if(0 == p_color.name().compare(BLANK_COLOR, Qt::CaseInsensitive))
     {
         return EColor::BlankColor;
     }
@@ -375,8 +375,8 @@ bool BDD::writeEn2En3Datas(const std::array<BDDRowData<int>, 9>& p_datas,
         for(int indexData = 0; indexData < currentData.value.size(); ++indexData)
         {
             rowData += QString::number(currentData.value[indexData]);
-            std::string color = Tools::convertColor(currentData.colorStr[indexData]);
-            rowColor += "'" + QString::fromStdString(color) + "'";
+            QString color = Tools::convertColor(QString::fromStdString(currentData.colorStr[indexData]));
+            rowColor += "'" + color + "'";
             if(indexData != currentData.value.size() - 1)
             {
                 rowData += ",";

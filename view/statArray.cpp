@@ -267,7 +267,7 @@ namespace view
             {
                 for(const int col: colValue)
                 {
-                    p_model.item(rowIndex, col)->setBackground(QBrush(QColor(QString::fromStdString(YELLOW_COLOR))));
+                    p_model.item(rowIndex, col)->setBackground(QBrush(QColor(YELLOW_COLOR)));
                 }
             }
         }

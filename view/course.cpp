@@ -444,16 +444,16 @@ namespace view {
                 switch(dataIndex)
                 {
                     case 0:
-                        color = QColor(QString::fromStdString(GREEN_COLOR));
+                        color = QColor(GREEN_COLOR);
                         break;
                     case 1:
-                        color = QColor(QString::fromStdString(BLUE_COLOR));
+                        color = QColor(BLUE_COLOR);
                         break;
                     case 2:
-                        color = QColor(QString::fromStdString(YELLOW_COLOR));
+                        color = QColor(YELLOW_COLOR);
                         break;
                     case 3:
-                        color = QColor(QString::fromStdString(ORANGE_COLOR));
+                        color = QColor(ORANGE_COLOR);
                         break;
                     default:
                         continue; // Skip if dataIndex is greater than 3

@@ -155,22 +155,22 @@ const EColor Tools::convertStringToColor(const QString& p_color)
 }
 
 //------------------------------------------------------------------------------
-std::string Tools::convertColor(const std::string p_color)
+QString Tools::convertColor(const QString p_color)
 //------------------------------------------------------------------------------
 {
-    if(GREEN_COLOR == p_color)
+    if(0 == p_color.compare(GREEN_COLOR, Qt::CaseInsensitive))
     {
         return "Green";
     }
-    else if(BLUE_COLOR == p_color)
+    else if(0 == p_color.compare(BLUE_COLOR, Qt::CaseInsensitive))
     {
         return "Blue";
     }
-    else if(YELLOW_COLOR == p_color)
+    else if(0 == p_color.compare(YELLOW_COLOR, Qt::CaseInsensitive))
     {
         return "Yellow";
     }
-    else if(ORANGE_COLOR == p_color)
+    else if(0 == p_color.compare(ORANGE_COLOR, Qt::CaseInsensitive))
     {
         return "Orange";
     }
@@ -187,7 +187,7 @@ bool Tools::isGreen(const QVariant& p_background)
         return false;
     }
     QColor color = p_background.value<QBrush>().color();
-    if(GREEN_COLOR == color.name().toStdString())
+    if(0 == color.name().compare(GREEN_COLOR, Qt::CaseInsensitive))
     {
         return true;
     }

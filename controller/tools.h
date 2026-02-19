@@ -16,7 +16,7 @@ public:
      * @param p_color: The color in hexa version.
      * @return The color in string format.
      */
-    static std::string convertColor(const std::string p_color);
+    static QString convertColor(const QString p_color);
 
     /**
      * @brief Returns the types of a number based on its divisibility by 3 and 4.
