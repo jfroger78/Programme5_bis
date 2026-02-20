@@ -105,6 +105,19 @@ namespace controller {
                                             });
                 m_statLPDArrayController->setChangeFilterConnected(value);
             }
+
+            m_statColorArrayController->setFullDatas(fullCombinationBDDDatas);
+            m_statColorArrayController->setCurrentRaceDatas(totalUsed);
+            m_statColorArrayController->onStartFilter(convertFilter(filter));
+            if(!m_statColorArrayController->isChangeFilterConnected()) {
+                const bool value = connect(&m_statLPDArrayController->statArrayHMI(),
+                                           &view::StatArray::changeStatFilter,
+                                           this,
+                                           [this]() {
+                                            onChangeStatFilter(m_statColorArrayController);
+                                           });
+                m_statColorArrayController->setChangeFilterConnected(value);
+            }
         }
     }
 
@@ -137,6 +150,8 @@ namespace controller {
         filter.yellowStrict = m_course->yellowStrict();
         filter.yellowMin = m_course->yellowMin();
         filter.distance = m_course->distanceFilter();
+
+        filter.colorFilter = m_course->numberOfColor();
 
         return filter;
     }
@@ -234,6 +249,8 @@ namespace controller {
         result.yellowStrict = p_filterToConvert.yellowStrict;
         result.distance = p_filterToConvert.distance;
         result.horses = p_filterToConvert.horses;
+
+        result.colorFilter = p_filterToConvert.colorFilter;
 
         return result;
     }

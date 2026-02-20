@@ -258,6 +258,12 @@ namespace view {
             return m_totalRow;
         }
 
+        /**
+         * @brief Compute the number of the input color in the input columnIndex
+         * @return A map which contain, by color, the number of time where it appears by column.
+         */
+        const std::map<int, ColorsValue> numberOfColor();
+
     private:
         /**
          * @brief Connects the user interface elements to their respective slots
@@ -324,6 +330,18 @@ namespace view {
          */
         void displayCombination(const Combination& p_combination,
                                 QStandardItemModel* p_model);
+
+        /**
+         * @brief Fills the color data array.
+         * @param p_model The concerning model.
+         * @param p_index The model index corresponding to the cell to analyse.
+         * @param p_colIndex The column index.
+         * @param p_colorArray The array to fill.
+         */
+        void fillColorArray(const QAbstractItemModel* p_model,
+                            const QModelIndex& p_index,
+                            const int p_colIndex,
+                            std::map<int, ColorsValue>& p_colorArray);
 
     private:
         Ui::Course *m_ui;//!< Pointer to the user interface

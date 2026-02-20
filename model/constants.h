@@ -57,13 +57,38 @@ enum EFilter
     FilterYellow, // J
     FilterLPJ, // Discipine + Leaver + Yellow
     FilterLP, // Discipline + Leaver
-    FilterLPD // Discipline + Leaver + Distance
+    FilterLPD, // Discipline + Leaver + Distance
+    FilterColor
+};
+
+struct ColorsValue {
+    int greenNumber = 0;
+    int blueNumber = 0;
+    int yellowNumber = 0;
+    int orangeNumber = 0;
+    int blankNumber = 0;
+
+    void colorData(const QString& p_color) {
+        if(0 == p_color.compare(GREEN_COLOR, Qt::CaseInsensitive)) {
+            greenNumber++;
+        } else if(0 == p_color.compare(BLUE_COLOR, Qt::CaseInsensitive)) {
+            blueNumber++;
+        } else if(0 == p_color.compare(YELLOW_COLOR, Qt::CaseInsensitive)) {
+            yellowNumber++;
+        } else if(0 == p_color.compare(ORANGE_COLOR, Qt::CaseInsensitive)) {
+            orangeNumber++;
+        } else {
+            blankNumber++;
+        }
+    }
 };
 
 struct Filter
 {
     QString letterStrict = QString(); //!< Strict letter filter.
     QString letterMin = QString(); //!< Minimum letter filter.
+
+    std::map<int, ColorsValue> colorFilter;
 
     /**
      * @brief Returns true if the letter passes the filter, false otherwise.
@@ -145,75 +170,92 @@ enum ERowArrayValue
 
 struct RaceData
 {
-    std::array<int, 8> numbers;
-    int winner;
-    int place1;
-    int place2;
-    int nbrLeaver;
-    int distance;
-    QString discipline;
-    int id = 0;
+    public:
+        std::array<int, 8> numbers;
+        int winner;
+        int place1;
+        int place2;
+        int nbrLeaver;
+        int distance;
+        QString discipline;
+        int id = 0;
 
-    std::array<std::array<en2En3Struct, 16>, 9> en2;
-    std::array<std::array<en2En3Struct, 16>, 9> en3;
-    std::array<std::array<en2En3Struct, 16>, 9> en2En3;
+        std::array<std::array<en2En3Struct, 16>, 9> en2;
+        std::array<std::array<en2En3Struct, 16>, 9> en3;
+        std::array<std::array<en2En3Struct, 16>, 9> en2En3;
+    
+    public:
+        /**
+         * @brief Returns the index corresponding to the winner row.
+         * @return The winner row.
+         */
+        const int winnerRow() const;
 
-    /**
-     * @brief Returns the index corresponding to the winner row.
-     * @return The winner row.
-     */
-    const int winnerRow() const;
+        /**
+         * @brief Returns the datas which are contain in the winner data.
+         * @return The datas which are contain in the winner data, -1 if the winner is not found.
+         */
+        const std::array<int, 24> winnerDatas() const;
 
-    /**
-     * @brief Returns the datas which are contain in the winner data.
-     * @return The datas which are contain in the winner data, -1 if the winner is not found.
-     */
-    const std::array<int, 24> winnerDatas() const;
+        /**
+         * @brief Returns the datas which correspond to the total row.
+         * @return An array which contain the total row datas.
+         */
+        const std::array<int, 24> totalDatas() const;
 
-    /**
-     * @brief Returns the datas which correspond to the total row.
-     * @return An array which contain the total row datas.
-     */
-    const std::array<int, 24> totalDatas() const;
+        /**
+         * @brief Convert winner datas to O and X symbol.
+         * @param p_isConverted: True of the conversion is well done, false otherwise.
+         * @return The winner row converted in O and X.
+         */
+        const std::array<CompareValue, 24> convertValue(bool& p_isConverted) const;
 
-    /**
-     * @brief Convert winner datas to O and X symbol.
-     * @param p_isConverted: True of the conversion is well done, false otherwise.
-     * @return The winner row converted in O and X.
-     */
-    const std::array<CompareValue, 24> convertValue(bool& p_isConverted) const;
+        /**
+         * @brief Convert a value in O and X.
+         * @param p_value: The value to convert.
+         * @param p_datas: The rest of the datas contain in the column.
+         * @return The converted value.
+         */
+        QString convertValueToOOrX(const int p_value, const std::array<int, 8>& p_datas) const;
 
-    /**
-     * @brief Convert a value in O and X.
-     * @param p_value: The value to convert.
-     * @param p_datas: The rest of the datas contain in the column.
-     * @return The converted value.
-     */
-    QString convertValueToOOrX(const int p_value, const std::array<int, 8>& p_datas) const;
+        /**
+         * @brief Checks if the winner datas pass the sub filter.
+         * @param p_row: The selected row for the filter.
+         * @param p_column: The selected column for the filter.
+         * @return True if it passes the filter, false otherwise.
+         */
+        const bool isPassFilter(const int p_row, const int p_column) const;
 
-    /**
-     * @brief Checks if the winner datas pass the sub filter.
-     * @param p_row: The selected row for the filter.
-     * @param p_column: The selected column for the filter.
-     * @return True if it passes the filter, false otherwise.
-     */
-    const bool isPassFilter(const int p_row, const int p_column) const;
+        /**
+         * @brief Checks if the value corresponding to the filter.
+         * @param p_filter: The filter to pass.
+         * @param p_value: The value to test.
+         * @return True if the value passes the filter, false otherwise.
+         */
+        const bool filtered(const ERowArrayValue& p_filter, const CompareValue& p_value) const;
 
-    /**
-     * @brief Checks if the value corresponding to the filter.
-     * @param p_filter: The filter to pass.
-     * @param p_value: The value to test.
-     * @return True if the value passes the filter, false otherwise.
-     */
-    const bool filtered(const ERowArrayValue& p_filter, const CompareValue& p_value) const;
+        /**
+         * @brief Check if the input color exist in the input column.
+         * @param p_color: The color to search.
+         * @param p_column: The column index in which search.
+         * @return True if the color is find, false otherwise.
+         */
+        const bool colorInColumn(const QString p_color, const int p_column) const;
 
-    /**
-     * @brief Check if the input color exist in the input column.
-     * @param p_color: The color to search.
-     * @param p_column: The column index in which search.
-     * @return True if the color is find, false otherwise.
-     */
-    const bool colorInColumn(const QString p_color, const int p_column) const;
+        /**
+         * @brief Compute the number of each color for each column.
+         * @return A map by color of it's number by column.
+         */
+        const std::map<int, ColorsValue> numberOfColor() const;
+
+    private:
+        /**
+         * @brief Converts a color into it's hexa value.
+         * @param p_color: The color name to convert.
+         * @return The hexa value of the color.
+         */
+        const QString convertColor(const QString& p_color) const;
+
 };
 
 struct en2En3Array

@@ -80,68 +80,133 @@ namespace view
         // Sets percents
         int rowIndex = 0;
 
-        // O
-        rowHeaders.push_back("O");
-        setPercent(rowIndex,
-                   p_datasToDisplay.arrayCircle,
-                   p_datasToDisplay.total,
-                   statModel);
-        rowIndex++;
+        if(-1 == p_datasToDisplay.totalByColumn[0]) {
+            // O
+            rowHeaders.push_back("O");
+            setPercent(rowIndex,
+                    p_datasToDisplay.arrayCircle,
+                    p_datasToDisplay.total,
+                    statModel);
+            rowIndex++;
 
-        // V%O
-        rowHeaders.push_back("V\%O");
-        setPercent(rowIndex,
-                   p_datasToDisplay.arrayGreen,
-                   p_datasToDisplay.arrayCircle,
-                   statModel);
-        rowIndex++;
+            // V%O
+            rowHeaders.push_back("V\%O");
+            setPercent(rowIndex,
+                    p_datasToDisplay.arrayGreen,
+                    p_datasToDisplay.arrayCircle,
+                    statModel);
+            rowIndex++;
 
-        // Vert
-        rowHeaders.push_back("Vert");
-        setPercent(rowIndex,
-                   p_datasToDisplay.arrayGreen,
-                   p_datasToDisplay.totalGreen,
-                   statModel);
-        rowIndex++;
+            // Vert
+            rowHeaders.push_back("Vert");
+            setPercent(rowIndex,
+                    p_datasToDisplay.arrayGreen,
+                    p_datasToDisplay.totalGreen,
+                    statModel);
+            rowIndex++;
 
-        // V gagnant
-        rowHeaders.push_back("V gagnant");
-        setPercent(rowIndex,
-                   p_datasToDisplay.arrayGreenWinner,
-                   p_datasToDisplay.arrayGreenWinnerTotal,
-                   statModel);
-        rowIndex++;
+            // V gagnant
+            rowHeaders.push_back("V gagnant");
+            setPercent(rowIndex,
+                    p_datasToDisplay.arrayGreenWinner,
+                    p_datasToDisplay.arrayGreenWinnerTotal,
+                    statModel);
+            rowIndex++;
 
-        // Bleu
-        rowHeaders.push_back("Bleu");
-        setPercent(rowIndex,
-                   p_datasToDisplay.arrayBlue,
-                   p_datasToDisplay.totalBlue,
-                   statModel);
-        rowIndex++;
+            // Bleu
+            rowHeaders.push_back("Bleu");
+            setPercent(rowIndex,
+                    p_datasToDisplay.arrayBlue,
+                    p_datasToDisplay.totalBlue,
+                    statModel);
+            rowIndex++;
 
-        // Jaune
-        rowHeaders.push_back("Jaune");
-        setPercent(rowIndex,
-                   p_datasToDisplay.arrayYellow,
-                   p_datasToDisplay.totalYellow,
-                   statModel);
-        rowIndex++;
+            // Jaune
+            rowHeaders.push_back("Jaune");
+            setPercent(rowIndex,
+                    p_datasToDisplay.arrayYellow,
+                    p_datasToDisplay.totalYellow,
+                    statModel);
+            rowIndex++;
 
-        // Orange
-        rowHeaders.push_back("Orange");
-        setPercent(rowIndex,
-                   p_datasToDisplay.arrayOrange,
-                   p_datasToDisplay.totalOrange,
-                   statModel);
-        rowIndex++;
+            // Orange
+            rowHeaders.push_back("Orange");
+            setPercent(rowIndex,
+                    p_datasToDisplay.arrayOrange,
+                    p_datasToDisplay.totalOrange,
+                    statModel);
+            rowIndex++;
 
-        // Blanc
-        rowHeaders.push_back("Blanc");
-        setPercent(rowIndex,
-                   p_datasToDisplay.arrayBlank,
-                   p_datasToDisplay.totalBlank,
-                   statModel);
+            // Blanc
+            rowHeaders.push_back("Blanc");
+            setPercent(rowIndex,
+                    p_datasToDisplay.arrayBlank,
+                    p_datasToDisplay.totalBlank,
+                    statModel);
+        } else {
+            // O
+            rowHeaders.push_back("O");
+            setPercent(rowIndex,
+                    p_datasToDisplay.arrayCircle,
+                    p_datasToDisplay.totalByColumn,
+                    statModel);
+            rowIndex++;
+
+            // V%O
+            rowHeaders.push_back("V\%O");
+            setPercent(rowIndex,
+                    p_datasToDisplay.arrayGreen,
+                    p_datasToDisplay.arrayCircle,
+                    statModel);
+            rowIndex++;
+
+            // Vert
+            rowHeaders.push_back("Vert");
+            setPercent(rowIndex,
+                    p_datasToDisplay.arrayGreen,
+                    p_datasToDisplay.totalByColumn,
+                    statModel);
+            rowIndex++;
+
+            // V gagnant
+            rowHeaders.push_back("V gagnant");
+            setPercent(rowIndex,
+                    p_datasToDisplay.arrayGreenWinner,
+                    p_datasToDisplay.arrayGreenWinnerTotal,
+                    statModel);
+            rowIndex++;
+
+            // Bleu
+            rowHeaders.push_back("Bleu");
+            setPercent(rowIndex,
+                    p_datasToDisplay.arrayBlue,
+                    p_datasToDisplay.totalByColumn,
+                    statModel);
+            rowIndex++;
+
+            // Jaune
+            rowHeaders.push_back("Jaune");
+            setPercent(rowIndex,
+                    p_datasToDisplay.arrayYellow,
+                    p_datasToDisplay.totalByColumn,
+                    statModel);
+            rowIndex++;
+
+            // Orange
+            rowHeaders.push_back("Orange");
+            setPercent(rowIndex,
+                    p_datasToDisplay.arrayOrange,
+                    p_datasToDisplay.totalByColumn,
+                    statModel);
+            rowIndex++;
+
+            // Blanc
+            rowHeaders.push_back("Blanc");
+            setPercent(rowIndex,
+                    p_datasToDisplay.arrayBlank,
+                    p_datasToDisplay.totalByColumn,
+                    statModel);
+        }
         
         statModel->setVerticalHeaderLabels(rowHeaders);
         getLittleOne(*statModel);

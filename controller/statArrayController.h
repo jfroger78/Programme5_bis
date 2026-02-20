@@ -153,6 +153,13 @@ namespace controller
             const std::vector<RaceData> startLPDFilter(const Filter& p_filter);
 
             /**
+             * @brief Launches a filter by color by column.
+             * @param p_filter: The filter which contains color of current race.
+             * @return A filtered list of RaceData.
+             */
+            std::array<std::vector<RaceData>, 24> startColorFilter(const Filter& p_filter);
+
+            /**
              * @brief Computes the number of yellow from the current DB race.
              * @param p_currentRace: The race fills by the user.
              * @param p_dataFromDB: The race extract from the DB.
@@ -167,6 +174,13 @@ namespace controller
              * @return The statistics.
              */
             const StatisticsData generateStatistics(const std::vector<RaceData>& p_filteredDatas);
+
+            /**
+             * @brief Generates the statistics data.
+             * @param p_filteredData: The datas which pass filters.
+             * @return The statistics.
+             */
+            const StatisticsData generateStatistics(const std::array<std::vector<RaceData>, 24>& p_filteredDatas);
 
             /**
              * @brief Computes the number winner green compare to the total of green in the column.
@@ -192,6 +206,7 @@ namespace controller
         private:
             std::vector<RaceData> m_fullDatas; //!< The full datas extract from DB.
             std::vector<RaceData> m_currentFilteredDatas; //!< The datas filter by the current used filter.
+            std::array<std::vector<RaceData>, 24> m_currentFilteredDatasByColumn; //!< The datas filter by the current used filter by column.
 
             EFilter m_currentFilterType; //!< The current used filter to this array.
             EFilter m_filter1; //!< The first filter associated to this array.

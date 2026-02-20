@@ -16,6 +16,7 @@ struct StatisticsData
     
     // Totals
     int total;
+    std::array<int, 24> totalByColumn = {-1};
     std::array<int, 24> totalGreen = {};
     std::array<int, 24> totalBlue = {};
     std::array<int, 24> totalYellow = {};

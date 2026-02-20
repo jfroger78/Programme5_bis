@@ -325,3 +325,53 @@ const bool RaceData::colorInColumn(const QString p_color, const int p_column) co
 
     return false;
 }
+
+//----------------------------------------------------
+const std::map<int, ColorsValue> RaceData::numberOfColor() const
+//----------------------------------------------------
+{
+    std::map<int, ColorsValue> ret;
+    for(int row = 0; row < en2.size() - 1; ++row) {
+        for(int col = 0; col < colIndexes.size(); ++col) {
+            const int currentColIndex = colIndexes[col];
+            // En2
+            {
+                en2En3Struct en2Data = en2[row][currentColIndex];
+                ret[col].colorData(convertColor(en2Data.color));
+            }
+            // En3
+            {
+                en2En3Struct en3Data = en3[row][currentColIndex];
+                ret[col + 8].colorData(convertColor(en3Data.color));
+            }
+            //En2En3
+            {
+                en2En3Struct en2En3Data = en2En3[row][currentColIndex];
+                ret[col + 16].colorData(convertColor(en2En3Data.color));
+            }
+        }
+    }
+
+    return ret;
+}
+
+//----------------------------------------------------
+const QString RaceData::convertColor(const QString& p_color) const
+//----------------------------------------------------
+{
+    if(0 == p_color.compare("Green", Qt::CaseInsensitive)) {
+        return GREEN_COLOR;
+    } else if(0 == p_color.compare("Blue", Qt::CaseInsensitive)) {
+        return BLUE_COLOR;
+    } else if(0 == p_color.compare("Yellow", Qt::CaseInsensitive)) {
+        return YELLOW_COLOR;
+    } else if(0 ==  p_color.compare("Orange", Qt::CaseInsensitive)) {
+        return ORANGE_COLOR;
+    } else if((0 == p_color.compare("Blank", Qt::CaseInsensitive))
+              || (0 == p_color.compare("None", Qt::CaseInsensitive))) {
+        return BLANK_COLOR;
+    }
+
+    qWarning() << "Unknown color:" << p_color;
+    return BLANK_COLOR;
+}

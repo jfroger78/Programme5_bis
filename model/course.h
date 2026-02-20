@@ -20,6 +20,8 @@ namespace model {
         int distance = 0; //!< Distance filter.
         std::array<int, 8> horses; //!< Horses filter.
 
+        std::map<int, ColorsValue> colorFilter; //!< Number of this color in current race by column.
+
         /**
          * @brief Returns the letter filter and true if the strict letter is used.
          * @param p_letter The letter filter.

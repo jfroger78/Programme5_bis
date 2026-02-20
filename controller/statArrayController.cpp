@@ -56,7 +56,12 @@ namespace controller
         m_currentFilterType = m_filter1;
         m_statArray.resetText();
         filteredDatas(p_filter, m_currentFilterType);
-        const StatisticsData statistics = generateStatistics(m_currentFilteredDatas);
+        StatisticsData statistics;
+        if(EFilter::FilterColor != m_currentFilterType) {
+            statistics = generateStatistics(m_currentFilteredDatas);
+        } else {
+            statistics = generateStatistics(m_currentFilteredDatasByColumn);
+        }
         m_statArray.displayDatas(statistics);
     }
 
@@ -75,6 +80,9 @@ namespace controller
                 break;
             case FilterLPD:
                 m_currentFilteredDatas = startLPDFilter(p_filter);
+                break;
+            case FilterColor:
+                m_currentFilteredDatasByColumn = startColorFilter(p_filter);
                 break;
         }
     }
@@ -205,6 +213,38 @@ namespace controller
     }
 
     //--------------------------------------------------------------------------------
+    std::array<std::vector<RaceData>, 24> StatArrayController::startColorFilter(const Filter& p_filter)
+    //--------------------------------------------------------------------------------
+    {
+        std::array<std::vector<RaceData>, 24> result;
+        if(m_fullDatas.empty()) {
+            qWarning() << "Set the full datas before using startColorFilter";
+            return result;
+        }
+
+        for(const RaceData& data: m_fullDatas) {
+            const std::map<int, ColorsValue> raceDataNumberOfColor = data.numberOfColor();
+            for(std::map<int, ColorsValue>::const_iterator it = raceDataNumberOfColor.begin();
+                it != raceDataNumberOfColor.end();
+                ++it) {
+                // Todo: Find why p_filter.colorFilter.find(it->first) is always null
+                if(p_filter.colorFilter.end() != p_filter.colorFilter.find(it->first)) {
+                    std::map<int, ColorsValue>::const_iterator value = p_filter.colorFilter.find(it->first);
+                    if((it->second.greenNumber == value->second.greenNumber)
+                        && (it->second.blueNumber == value->second.blueNumber)
+                        && (it->second.yellowNumber == value->second.yellowNumber)
+                        && (it->second.orangeNumber == value->second.orangeNumber)
+                        && (it->second.blankNumber == value->second.blankNumber)) {
+                        result[it->first].push_back(data);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    //--------------------------------------------------------------------------------
     const int StatArrayController::computeYellow(const std::array<int, 24>& p_currentRace,
                                                  const std::array<int, 24> p_dataFromDB)
     //--------------------------------------------------------------------------------
@@ -254,8 +294,8 @@ namespace controller
                                 {
                                     result.arrayGreen[indexCol]++;
                                 }
-                          }
-                          break;
+                            }
+                            break;
                         }
                         case BlueArray:
                         {
@@ -312,6 +352,74 @@ namespace controller
             }
             computeGreenWinner(data, result);
         }
+        return result;
+    }
+
+    //--------------------------------------------------------------------------------
+    const StatisticsData StatArrayController::generateStatistics(const std::array<std::vector<RaceData>, 24>& p_filteredDatas)
+    //--------------------------------------------------------------------------------
+    {
+        StatisticsData result;
+
+        for(int colIndex = 0; colIndex < p_filteredDatas.size(); ++colIndex) {
+            std::vector<RaceData> currentRace = p_filteredDatas[colIndex];
+            result.totalByColumn[colIndex] = p_filteredDatas.size();
+            for(const RaceData& data: currentRace) {
+                for(int indexRow = 0; indexRow < static_cast<int>(UnknownRowArray); ++indexRow) {
+                    switch(indexRow) {
+                        case CircleArray:
+                            if(data.isPassFilter(indexRow, colIndex)) {
+                                result.arrayCircle[colIndex]++;
+                            }
+                            break;
+                        case GreenArray:
+                            if(data.colorInColumn("Green", colIndex)) {
+                                result.totalGreen[colIndex]++;
+                                if(data.isPassFilter(indexRow, colIndex)) {
+                                    result.arrayGreen[colIndex]++;
+                                }
+                            }
+                            break;
+                        case BlueArray:
+                            if(data.colorInColumn("Blue", colIndex)) {
+                                result.totalBlue[colIndex]++;
+                                if(data.isPassFilter(indexRow, colIndex)) {
+                                    result.arrayBlue[colIndex]++;
+                                }
+                            }
+                            break;
+                        case YellowArray:
+                            if(data.colorInColumn("Yellow", colIndex)) {
+                                result.totalYellow[colIndex]++;
+                                if(data.isPassFilter(indexRow, colIndex)) {
+                                    result.arrayYellow[colIndex]++;
+                                }
+                            }
+                            break;
+                        case OrangeArray:
+                            if(data.colorInColumn("Orange", colIndex)) {
+                                result.totalOrange[colIndex]++;
+                                if(data.isPassFilter(indexRow, colIndex)) {
+                                    result.arrayOrange[colIndex]++;
+                                }
+                            }
+                            break;
+                        case BlankArray:
+                            if(data.colorInColumn("Blank", colIndex)) {
+                                result.totalBlank[colIndex]++;
+                                if(data.isPassFilter(indexRow, colIndex)) {
+                                    result.arrayBlank[colIndex]++;
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                computeGreenWinner(data, result);
+            }
+        }
+
         return result;
     }
 
@@ -414,7 +522,12 @@ namespace controller
         }
         m_statArray.changeFilterText();
         filteredDatas(p_filter, m_currentFilterType);
-        const StatisticsData statistics = generateStatistics(m_currentFilteredDatas);
+        StatisticsData statistics;
+        if(EFilter::FilterColor != m_currentFilterType) {
+            statistics = generateStatistics(m_currentFilteredDatas);
+        } else {
+            statistics = generateStatistics(m_currentFilteredDatasByColumn);
+        }
         m_statArray.displayDatas(statistics);
     }
 }

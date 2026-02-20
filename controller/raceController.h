@@ -101,6 +101,24 @@ namespace controller {
             return m_statLPJArrayController;
         }
 
+        /**
+         * @brief Sets the color stat array controller for this controller.
+         * @param p_statArrayController: Pointer to the color stat array controller to set.
+         */
+        void setColorStatArrayController(StatArrayController* p_statArrayController)
+        {
+            m_statColorArrayController = p_statArrayController;
+        }
+
+        /**
+         * @brief Returns a pointer to the color stat array controller.
+         * @return A pointer to the color stat array controller.
+         */
+        StatArrayController* statColorArrayController()
+        {
+            return m_statColorArrayController;
+        }
+
     private:
         /**
          * @brief Fills the course filter.
@@ -130,6 +148,7 @@ namespace controller {
         view::Course* m_course; //!< Pointer to the course being controlled.
         controller::StatArrayController* m_statLPDArrayController; //!< Pointer to the LPD stat array controller.
         controller::StatArrayController* m_statLPJArrayController; //!< Pointer to the LPJ stat array controller.
+        controller::StatArrayController* m_statColorArrayController; //!< Pointer to the color stat array controller.
     };
 };
 

@@ -98,6 +98,38 @@ namespace view {
     }
 
     //---------------------------------------------
+    const std::map<int, ColorsValue> Course::numberOfColor()
+    //---------------------------------------------
+    {
+        std::map<int, ColorsValue> ret;
+
+        for(int index = 0; index < colIndexes.size(); ++index)
+        {
+            const int currentIndex = colIndexes[index];
+            for(int rowIndex = 0; rowIndex < modelEn2()->rowCount() - 1; ++rowIndex)
+            {
+                // En2
+                {
+                    QModelIndex modelIndex = modelEn2()->index(rowIndex, currentIndex);
+                    fillColorArray(modelEn2(), modelIndex, index, ret);
+                }
+                // En3
+                {
+                    QModelIndex modelIndex = modelEn3()->index(rowIndex, currentIndex);
+                    fillColorArray(modelEn3(), modelIndex, index + 8, ret);
+                }
+                // En2En3
+                {
+                    QModelIndex modelIndex = modelEn2En3()->index(rowIndex, currentIndex);
+                    fillColorArray(modelEn2En3(), modelIndex, index + 16, ret);
+                }
+            }
+        }
+
+        return ret;
+    }
+
+    //---------------------------------------------
     void Course::connectIHM()
     //---------------------------------------------
     {
@@ -612,6 +644,24 @@ namespace view {
     //------------------------------------------------------------------------------------------------------------------------
     {
         static_cast<QGridLayout*>(m_ui->m_resultats->layout())->addWidget(p_resultArray, p_row, p_column, p_rowSpan, p_colSpan);
+    }
+
+    //-----------------------------------------------------------------------------
+    void Course::fillColorArray(const QAbstractItemModel* p_model,
+                                const QModelIndex& p_index,
+                                const int p_columnIndex,
+                                std::map<int, ColorsValue>& p_colorArray)
+    //-----------------------------------------------------------------------------
+    {
+        QVariant background = p_model->data(p_index, Qt::BackgroundRole);
+        QVariant value = p_model->data(p_index);
+        if(background.canConvert<QBrush>())
+        {
+            QBrush brush = background.value<QBrush>();
+            p_colorArray[p_columnIndex].colorData(brush.color().name());
+        } else {
+            p_colorArray[p_columnIndex].colorData(BLANK_COLOR);
+        }
     }
 
 }
