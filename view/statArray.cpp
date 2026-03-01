@@ -10,19 +10,19 @@
 namespace view
 {
     //-------------------------------------------
-    StatArray::StatArray(const QString p_filter1,
-                         const QString p_filter2,
+    StatArray::StatArray(const SFilters p_filters,
                          QWidget* p_parent)
         : QWidget { p_parent }
         , m_ui { new Ui::StatArray }
-        , m_filter1 { p_filter1 }
-        , m_filter2 { p_filter2 }
+        , m_filters { p_filters }
     //-------------------------------------------
     {
         m_ui->setupUi(this);
-        m_ui->m_statGroupBox->setTitle(p_filter1);
-        m_ui->m_changeStatBtn->setVisible(!(p_filter1.isEmpty() || p_filter2.isEmpty()));
-        m_ui->m_changeStatBtn->setText(p_filter2);
+        m_ui->m_statGroupBox->setTitle(m_filters.filter1Str());
+        m_ui->m_changeStatBtn->setVisible(!(m_filters.filter1Str().isEmpty() || m_filters.filter2Str().isEmpty()));
+        m_ui->m_changeStatBtn2->setVisible(!(m_filters.filter3Str().isEmpty() || m_filters.filter4Str().isEmpty()));
+        m_ui->m_changeStatBtn->setText(m_filters.filter2Str());
+        m_ui->m_changeStatBtn2->setText(m_filters.filter4Str());
         m_ui->m_statDatas->setMinimumHeight(275);
 
         connection();
@@ -45,6 +45,7 @@ namespace view
             });
         connect(m_ui->m_reset, &QPushButton::clicked, this, &StatArray::resetSubFilter);
         connect(m_ui->m_changeStatBtn, &QPushButton::clicked, this, &StatArray::changeStatFilter);
+        connect(m_ui->m_changeStatBtn2, &QPushButton::clicked, this, &StatArray::changeStatFilter2);
     }
 
     //-------------------------------------------
@@ -230,15 +231,15 @@ namespace view
     void StatArray::changeFilterText()
     //-------------------------------------------
     {
-        if(0 == m_filter1.compare(m_ui->m_changeStatBtn->text(), Qt::CaseInsensitive))
+        if(0 == m_filters.filter1Str().compare(m_ui->m_changeStatBtn->text(), Qt::CaseInsensitive))
         {
-            m_ui->m_changeStatBtn->setText(m_filter2);
-            m_ui->m_statGroupBox->setTitle(m_filter1);
+            m_ui->m_changeStatBtn->setText(m_filters.filter2Str());
+            m_ui->m_statGroupBox->setTitle(m_filters.filter1Str());
         }
         else
         {
-            m_ui->m_changeStatBtn->setText(m_filter1);
-            m_ui->m_statGroupBox->setTitle(m_filter2);
+            m_ui->m_changeStatBtn->setText(m_filters.filter1Str());
+            m_ui->m_statGroupBox->setTitle(m_filters.filter2Str());
         }
     }
 
@@ -246,8 +247,29 @@ namespace view
     void StatArray::resetText()
     //-------------------------------------------
     {
-        m_ui->m_statGroupBox->setTitle(m_filter1);
-        m_ui->m_changeStatBtn->setText(m_filter2);
+        m_ui->m_statGroupBox->setTitle(m_filters.filter1Str());
+        m_ui->m_changeStatBtn->setText(m_filters.filter2Str());
+    }
+
+    //-------------------------------------------
+    void StatArray::changeFilter2Text()
+    //-------------------------------------------
+    {
+        if(0 == m_filters.filter3Str().compare(m_ui->m_changeStatBtn->text(), Qt::CaseInsensitive))
+        {
+            m_ui->m_changeStatBtn2->setText(m_filters.filter4Str());
+        }
+        else
+        {
+            m_ui->m_changeStatBtn2->setText(m_filters.filter3Str());
+        }
+    }
+
+    //-------------------------------------------
+    void StatArray::reset2Text()
+    //-------------------------------------------
+    {
+        m_ui->m_changeStatBtn2->setText(m_filters.filter4Str());
     }
 
     //-------------------------------------------

@@ -89,7 +89,13 @@ namespace controller {
                                            [this](){
                                                 onChangeStatFilter(m_statLPJArrayController);
                                             });
-                m_statLPJArrayController->setChangeFilterConnected(value);
+                const bool value2 = connect(&m_statLPJArrayController->statArrayHMI(),
+                                            &view::StatArray::changeStatFilter2,
+                                            this,
+                                            [this]() {
+                                                onChangeStatFilter2(m_statLPJArrayController);
+                                            });
+                m_statLPJArrayController->setChangeFilterConnected(value & value2);
             }
 
             m_statLPDArrayController->setFullDatas(fullCombinationBDDDatas);
@@ -103,20 +109,34 @@ namespace controller {
                                            [this](){
                                                 onChangeStatFilter(m_statLPDArrayController);
                                             });
-                m_statLPDArrayController->setChangeFilterConnected(value);
+                const bool value2 = connect(&m_statLPDArrayController->statArrayHMI(),
+                                            &view::StatArray::changeStatFilter2,
+                                            this,
+                                            [this]() {
+                                                onChangeStatFilter2(m_statLPDArrayController);
+                                            });
+                
+                m_statLPDArrayController->setChangeFilterConnected(value && value2);
+                
             }
 
             m_statColorArrayController->setFullDatas(fullCombinationBDDDatas);
             m_statColorArrayController->setCurrentRaceDatas(totalUsed);
             m_statColorArrayController->onStartFilter(convertFilter(filter));
             if(!m_statColorArrayController->isChangeFilterConnected()) {
-                const bool value = connect(&m_statLPDArrayController->statArrayHMI(),
+                const bool value = connect(&m_statColorArrayController->statArrayHMI(),
                                            &view::StatArray::changeStatFilter,
                                            this,
                                            [this]() {
                                             onChangeStatFilter(m_statColorArrayController);
                                            });
-                m_statColorArrayController->setChangeFilterConnected(value);
+                const bool value2 = connect(&m_statColorArrayController->statArrayHMI(),
+                                            &view::StatArray::changeStatFilter2,
+                                            this,
+                                            [this]() {
+                                                onChangeStatFilter2(m_statColorArrayController);
+                                            });
+                m_statColorArrayController->setChangeFilterConnected(value && value2);
             }
         }
     }
@@ -261,5 +281,13 @@ namespace controller {
     {
         model::Filter filter = courseFilter();
         p_controller->changeStatFilter(convertFilter(filter));
+    }
+
+    //----------------------------------------------
+    void RaceController::onChangeStatFilter2(StatArrayController* p_controller)
+    //----------------------------------------------
+    {
+        model::Filter filter = courseFilter();
+        p_controller->changeStatFilter2(convertFilter(filter));
     }
 }

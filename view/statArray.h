@@ -11,6 +11,7 @@
 
 // Custom includes
 #include "../model/statistic.h"
+#include "../model/constants.h"
 
 class QStandardItemModel;
 
@@ -20,18 +21,69 @@ namespace Ui{
 
 namespace view
 {
+    struct SFilters {
+        EFilter filter1;
+        EFilter filter2;
+        EFilter filter3;
+        EFilter filter4;
+
+        QString filter1Str() {
+            return convertFilterToStr(filter1);
+        }
+
+        QString filter2Str() {
+            return convertFilterToStr(filter2);
+        }
+
+        QString filter3Str() {
+            return convertFilterToStr(filter3);
+        }
+
+        QString filter4Str() {
+            return convertFilterToStr(filter4);
+        }
+
+        private:
+        QString convertFilterToStr(const EFilter& p_filter) {
+            switch(p_filter)
+            {
+                case FilterDiscipline:
+                    return "L";
+                case FilterLeaver:
+                    return "P";
+                case FilterDistance:
+                    return "D";
+                case FilterYellow:
+                    return "Y";
+                case FilterLPJ:
+                    return "L+P+J";
+                case FilterLP:
+                    return "L+P";
+                case FilterLPD:
+                    return "L+P+D";
+                case FilterColorFull:
+                    return "Color full";
+                case FilterColor:
+                    return "Color";
+                case FilterNone:
+                    return "";
+                default:
+                    qWarning() << "Unknown filter";
+                    return "";
+            }
+        }
+    };
+
     class StatArray: public QWidget
     {
         Q_OBJECT
         public:
             /**
              * @brief Constructor.
-             * @param p_filter1: The name of the first filter.
-             * @param p_filter2: The name of the second filter.
+             * @param p_filters: The filters used in this stat array.
              * @param p_parent: The parent widget.
              */
-            StatArray(const QString p_filter1,
-                      const QString p_filter2,
+            StatArray(const SFilters p_filters,
                       QWidget* p_parent = nullptr);
 
             /**
@@ -60,6 +112,16 @@ namespace view
              */
             void resetText();
 
+            /**
+             * @brief Changes the filter associated text to the second filter.
+             */
+            void changeFilter2Text();
+
+            /**
+             * @brief Resets text to their defailt value for the second filter.
+             */
+            void reset2Text();
+
         public:
             /**
              * @brief Starts the sub filters.
@@ -76,6 +138,11 @@ namespace view
              * @brief Changes the filter for the statistics.
              */
             Q_SIGNAL void changeStatFilter();
+
+            /**
+             * @brief Changes the second filter for the statistics.
+             */
+            Q_SIGNAL void changeStatFilter2();
 
         private:
             /**
@@ -111,8 +178,7 @@ namespace view
         private:
             Ui::StatArray *m_ui; //!< Pointer to the HMI.
 
-            QString m_filter1; //!< The name of the first filter.
-            QString m_filter2; //!< The name of the second filter.
+            SFilters m_filters; //!< The filters used for this stat array.
     };
 }
 

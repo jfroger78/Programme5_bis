@@ -102,16 +102,30 @@ Controller* Controller::m_instance = nullptr;
             if(nullptr != course)
             {
                 m_raceControllers[index].setCourse(course);
-                m_raceControllers[index].setLPJStatArrayController(new StatArrayController(EFilter::FilterLPJ, EFilter::FilterLP));
-                m_raceControllers[index].course()->addResultArray(&m_raceControllers[index].statLPJArrayController()->statArrayHMI(),
-                                                                  3, 0, 1, 8);
-                m_raceControllers[index].setLPDStatArrayController(new StatArrayController(EFilter::FilterLPD));
-                m_raceControllers[index].course()->addResultArray(&m_raceControllers[index].statLPDArrayController()->statArrayHMI(),
-                                                                  4, 0, 1, 8);
+                m_raceControllers[index].setLPJStatArrayController(
+                    new StatArrayController(
+                        EFilter::FilterLPJ,
+                        EFilter::FilterLP));
+                m_raceControllers[index].course()->addResultArray(
+                    &m_raceControllers[index].statLPJArrayController()->statArrayHMI(),
+                    3, 0, 1, 8);
 
-                m_raceControllers[index].setColorStatArrayController(new StatArrayController(EFilter::FilterColor));
-                m_raceControllers[index].course()->addResultArray(&m_raceControllers[index].statColorArrayController()->statArrayHMI(),
-                                                                  5, 0, 1, 8);
+                m_raceControllers[index].setLPDStatArrayController(
+                    new StatArrayController(
+                        EFilter::FilterLPD));
+                m_raceControllers[index].course()->addResultArray(
+                    &m_raceControllers[index].statLPDArrayController()->statArrayHMI(),
+                    4, 0, 1, 8);
+
+                m_raceControllers[index].setColorStatArrayController(
+                    new StatArrayController(
+                        EFilter::FilterColorFull,
+                        EFilter::FilterColor,
+                        EFilter::FilterLPJ,
+                        EFilter::FilterLP));
+                m_raceControllers[index].course()->addResultArray(
+                    &m_raceControllers[index].statColorArrayController()->statArrayHMI(),
+                    5, 0, 1, 8);
             }
         }
     }

@@ -6,13 +6,20 @@ namespace controller
 {
     //--------------------------------------------------------------------------------
     StatArrayController::StatArrayController(const EFilter p_filter1,
-                                             const EFilter p_filter2)
+                                             const EFilter p_filter2,
+                                             const EFilter p_filter3,
+                                             const EFilter p_filter4)
         : m_fullDatas {}
         , m_currentFilterType { p_filter1 }
         , m_filter1 { p_filter1 }
         , m_filter2 { p_filter2 }
-        , m_statArray { Tools::convertFilterToString(p_filter1),
-                        Tools::convertFilterToString(p_filter2) }
+        , m_currentFilter2Type { p_filter3 }
+        , m_filter3 { p_filter3 }
+        , m_filter4 { p_filter4 }
+        , m_statArray { {p_filter1,
+                        p_filter2,
+                        p_filter3,
+                        p_filter4} }
         , m_currentRaceDatas { -1 }
         , m_isChangeFilterConnected { false }
     //--------------------------------------------------------------------------------
@@ -54,13 +61,49 @@ namespace controller
     //--------------------------------------------------------------------------------
     {
         m_currentFilterType = m_filter1;
+        m_currentFilter2Type = m_filter3;
         m_statArray.resetText();
         filteredDatas(p_filter, m_currentFilterType);
         StatisticsData statistics;
-        if(EFilter::FilterColor != m_currentFilterType) {
-            statistics = generateStatistics(m_currentFilteredDatas);
-        } else {
-            statistics = generateStatistics(m_currentFilteredDatasByColumn);
+        switch(m_currentFilterType) {
+            case FilterDiscipline:
+            case FilterLeaver:
+            case FilterDistance:
+            case FilterYellow:
+            case FilterLPJ:
+            case FilterLP:
+            case FilterLPD:
+                if(EFilter::FilterNone != m_currentFilter2Type) {
+                    statistics = applySecondFilter(
+                        p_filter,
+                        m_currentFilter2Type,
+                        m_currentFilteredDatas);
+                } else {
+                    statistics = generateStatistics(m_currentFilteredDatas);
+                }
+                break;
+            case FilterColorFull:
+                if(EFilter::FilterNone != m_currentFilter2Type) {
+                    statistics = applySecondFilter(
+                        p_filter,
+                        m_currentFilter2Type,
+                        m_currentFilteredDatasByColorsByColumn);
+                } else {
+                    statistics = generateStatistics(m_currentFilteredDatasByColorsByColumn);
+                }
+                break;
+            case FilterColor:
+                if(EFilter::FilterNone != m_currentFilter2Type) {
+                    statistics = applySecondFilter(
+                        p_filter,
+                        m_currentFilter2Type,
+                        m_currentFilteredDatasByColors);
+                } else {
+                    statistics = generateStatistics(m_currentFilteredDatasByColors);
+                }
+                break;
+            default:
+                break;
         }
         m_statArray.displayDatas(statistics);
     }
@@ -81,8 +124,13 @@ namespace controller
             case FilterLPD:
                 m_currentFilteredDatas = startLPDFilter(p_filter);
                 break;
+            case FilterColorFull:
+                m_currentFilteredDatasByColorsByColumn = startColorFullFilter(p_filter);
+                break;
             case FilterColor:
-                m_currentFilteredDatasByColumn = startColorFilter(p_filter);
+                m_currentFilteredDatasByColors = startColorFilter(p_filter);
+                break;
+            default:
                 break;
         }
     }
@@ -213,12 +261,12 @@ namespace controller
     }
 
     //--------------------------------------------------------------------------------
-    std::array<std::vector<RaceData>, 24> StatArrayController::startColorFilter(const Filter& p_filter)
+    std::array<std::vector<RaceData>, 24> StatArrayController::startColorFullFilter(const Filter& p_filter)
     //--------------------------------------------------------------------------------
     {
         std::array<std::vector<RaceData>, 24> result;
         if(m_fullDatas.empty()) {
-            qWarning() << "Set the full datas before using startColorFilter";
+            qWarning() << "Set the full datas before using startColorFullFilter";
             return result;
         }
 
@@ -227,7 +275,6 @@ namespace controller
             for(std::map<int, ColorsValue>::const_iterator it = raceDataNumberOfColor.begin();
                 it != raceDataNumberOfColor.end();
                 ++it) {
-                // Todo: Find why p_filter.colorFilter.find(it->first) is always null
                 if(p_filter.colorFilter.end() != p_filter.colorFilter.find(it->first)) {
                     std::map<int, ColorsValue>::const_iterator value = p_filter.colorFilter.find(it->first);
                     if((it->second.greenNumber == value->second.greenNumber)
@@ -236,6 +283,46 @@ namespace controller
                         && (it->second.orangeNumber == value->second.orangeNumber)
                         && (it->second.blankNumber == value->second.blankNumber)) {
                         result[it->first].push_back(data);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    //--------------------------------------------------------------------------------
+    std::map<QString, std::array<std::vector<RaceData>, 24>> StatArrayController::startColorFilter(const Filter& p_filter)
+    //--------------------------------------------------------------------------------
+    {
+        // Todo to change to have RaceData by color and by column
+        std::map<QString, std::array<std::vector<RaceData>, 24>> result;
+        if(m_fullDatas.empty()) {
+            qWarning() << "Set the full datas before using startColorFilter";
+            return result;
+        }
+
+        for(const RaceData& datas: m_fullDatas) {
+            const std::map<int, ColorsValue> raceDataNumberOfColor = datas.numberOfColor();
+            for(std::map<int, ColorsValue>::const_iterator it = raceDataNumberOfColor.begin();
+                it != raceDataNumberOfColor.end();
+                ++it) {
+                if(p_filter.colorFilter.end() != p_filter.colorFilter.find(it->first)) {
+                    std::map<int, ColorsValue>::const_iterator value = p_filter.colorFilter.find(it->first);
+                    if(it->second.greenNumber == value->second.greenNumber) {
+                        result["Green"][it->first].push_back(datas);
+                    }
+                    if(it->second.blueNumber == value->second.blueNumber) {
+                        result["Blue"][it->first].push_back(datas);
+                    }
+                    if(it->second.yellowNumber == value->second.yellowNumber) {
+                        result["Yellow"][it->first].push_back(datas);
+                    }
+                    if(it->second.orangeNumber == value->second.orangeNumber) {
+                        result["Orange"][it->first].push_back(datas);
+                    }
+                    if(it->second.blankNumber == value->second.blankNumber) {
+                        result["Blank"][it->first].push_back(datas);
                     }
                 }
             }
@@ -271,80 +358,55 @@ namespace controller
     {
         StatisticsData result;
         result.total = p_filteredDatas.size();
-        for(const RaceData& data: p_filteredDatas)
-        {
-            for(int indexRow = 0; indexRow < static_cast<int>(UnknownRowArray); ++indexRow)
-            {
-                for(int indexCol = 0; indexCol < 24; ++indexCol)
-                {
-                    switch(indexRow)
-                    {
+        for(const RaceData& data: p_filteredDatas) {
+            for(int indexRow = 0; indexRow < static_cast<int>(UnknownRowArray); ++indexRow) {
+                for(int indexCol = 0; indexCol < 24; ++indexCol) {
+                    switch(indexRow) {
                         case CircleArray:
-                            if(data.isPassFilter(indexRow, indexCol))
-                            {
+                            if(data.isPassFilter(indexRow, indexCol)) {
                                 result.arrayCircle[indexCol]++;
                             }
                             break;
                         case GreenArray:
-                        {
-                            if(data.colorInColumn("Green", indexCol))
-                            {
+                            if(data.colorInColumn("Green", indexCol)) {
                                 result.totalGreen[indexCol]++;
-                                if(data.isPassFilter(indexRow, indexCol))
-                                {
+                                if(data.isPassFilter(indexRow, indexCol)) {
                                     result.arrayGreen[indexCol]++;
                                 }
                             }
                             break;
-                        }
                         case BlueArray:
-                        {
-                            if(data.colorInColumn("Blue", indexCol))
-                            {
+                            if(data.colorInColumn("Blue", indexCol)) {
                                 result.totalBlue[indexCol]++;
-                                if(data.isPassFilter(indexRow, indexCol))
-                                {
+                                if(data.isPassFilter(indexRow, indexCol)) {
                                     result.arrayBlue[indexCol]++;
                                 }
                             }
                             break;
-                        }
                         case YellowArray:
-                        {
-                            if(data.colorInColumn("Yellow", indexCol))
-                            {
+                            if(data.colorInColumn("Yellow", indexCol)) {
                                 result.totalYellow[indexCol]++;
-                                if(data.isPassFilter(indexRow, indexCol))
-                                {
+                                if(data.isPassFilter(indexRow, indexCol)) {
                                     result.arrayYellow[indexCol]++;
                                 }
                             }
                             break;
-                        }
                         case OrangeArray:
-                        {
-                            if(data.colorInColumn("Orange", indexCol))
-                            {
+                            if(data.colorInColumn("Orange", indexCol)) {
                                 result.totalOrange[indexCol]++;
-                                if(data.isPassFilter(indexRow, indexCol))
-                                {
+                                if(data.isPassFilter(indexRow, indexCol)) {
                                     result.arrayOrange[indexCol]++;
                                 }
                             }
                             break;
-                        }
                         case BlankArray:
-                        {
-                            if(data.colorInColumn("Blank", indexCol) || data.colorInColumn("None", indexCol))
-                            {
+                            if(data.colorInColumn("Blank", indexCol) || data.colorInColumn("None", indexCol)) {
                                 result.totalBlank[indexCol]++;
-                                if(data.isPassFilter(indexRow, indexCol))
-                                {
+                                if(data.isPassFilter(indexRow, indexCol)) {
                                     result.arrayBlank[indexCol]++;
                                 }
                             }
                             break;
-                        }
                         default:
                             break;
                     }
@@ -363,7 +425,7 @@ namespace controller
 
         for(int colIndex = 0; colIndex < p_filteredDatas.size(); ++colIndex) {
             std::vector<RaceData> currentRace = p_filteredDatas[colIndex];
-            result.totalByColumn[colIndex] = p_filteredDatas.size();
+            result.totalByColumn[colIndex] = currentRace.size();
             for(const RaceData& data: currentRace) {
                 for(int indexRow = 0; indexRow < static_cast<int>(UnknownRowArray); ++indexRow) {
                     switch(indexRow) {
@@ -424,6 +486,82 @@ namespace controller
     }
 
     //--------------------------------------------------------------------------------
+    const StatisticsData StatArrayController::generateStatistics(
+        const std::map<QString, std::array<std::vector<RaceData>, 24>>& p_filteredDatas)
+    //--------------------------------------------------------------------------------
+    {
+        StatisticsData result;
+
+        std::array<std::vector<RaceData>, 24> greenDatas = {};
+        if(p_filteredDatas.end() != p_filteredDatas.find("Green")) {
+            greenDatas = p_filteredDatas.find("Green")->second;
+        }
+
+        std::array<std::vector<RaceData>, 24> blueDatas = {};
+        if(p_filteredDatas.end() != p_filteredDatas.find("Blue")) {
+            blueDatas = p_filteredDatas.find("Blue")->second;
+        }
+
+        std::array<std::vector<RaceData>, 24> yellowDatas = {};
+        if(p_filteredDatas.end() != p_filteredDatas.find("Yellow")) {
+            yellowDatas = p_filteredDatas.find("Yellow")->second;
+        }
+
+        std::array<std::vector<RaceData>, 24> orangeDatas = {};
+        if(p_filteredDatas.end() != p_filteredDatas.find("Orange")) {
+            orangeDatas = p_filteredDatas.find("Orange")->second;
+        }
+
+        std::array<std::vector<RaceData>, 24> blankDatas = {};
+        if(p_filteredDatas.end() != p_filteredDatas.find("Blank")) {
+            blankDatas = p_filteredDatas.find("Blank")->second;
+        }
+
+        for(int colIndex = 0; colIndex < 24; ++colIndex) {
+            std::vector<RaceData> greenRaces = greenDatas[colIndex];
+            result.totalGreen[colIndex] = greenRaces.size();
+            std::vector<RaceData> blueRaces = blueDatas[colIndex];
+            result.totalBlue[colIndex] = blueRaces.size();
+            std::vector<RaceData> yellowRaces = yellowDatas[colIndex];
+            result.totalYellow[colIndex] = yellowRaces.size();
+            std::vector<RaceData> orangeRaces = orangeDatas[colIndex];
+            result.totalOrange[colIndex] = orangeRaces.size();
+            std::vector<RaceData> blankRaces = blankDatas[colIndex];
+            result.totalBlank[colIndex] = blankRaces.size();
+
+            result.arrayCircle[colIndex] = 0;
+
+            for(const RaceData& greenRace: greenRaces) {
+                if(greenRace.isPassFilter(GreenArray, colIndex)) {
+                    result.arrayGreen[colIndex]++;
+                }
+            }
+            for(const RaceData& blueRace: blueRaces) {
+                if(blueRace.isPassFilter(BlueArray, colIndex)) {
+                    result.arrayBlue[colIndex]++;
+                }
+            }
+            for(const RaceData& yellowRace: yellowRaces) {
+                if(yellowRace.isPassFilter(YellowArray, colIndex)) {
+                    result.arrayYellow[colIndex]++;
+                }
+            }
+            for(const RaceData& orangeRace: orangeRaces) {
+                if(orangeRace.isPassFilter(OrangeArray, colIndex)) {
+                    result.arrayOrange[colIndex]++;
+                }
+            }
+            for(const RaceData& blankRace: blankRaces) {
+                if(blankRace.isPassFilter(BlankArray, colIndex)) {
+                    result.arrayBlank[colIndex]++;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    //--------------------------------------------------------------------------------
     void StatArrayController::computeGreenWinner(const RaceData& p_data,
                                                  StatisticsData& p_statistics)
     //--------------------------------------------------------------------------------
@@ -471,32 +609,107 @@ namespace controller
     void StatArrayController::onStartSubFilter(const QModelIndexList& p_filterList)
     //--------------------------------------------------------------------------------
     {
-        if(m_currentFilteredDatas.empty())
+        if(m_currentFilteredDatas.empty() &&
+            m_currentFilteredDatasByColorsByColumn.empty() &&
+            m_currentFilteredDatasByColors.empty())
         {
             qWarning() << "No current filtered datas, start generic statistics before use onStartSubFilter";
             return;
         }
 
-        std::vector<RaceData> datas = m_currentFilteredDatas;
-        std::vector<RaceData> tmpData;
-        for(const QModelIndex& modelIndex: p_filterList)
-        {
-            const int rowIndex = modelIndex.row();
-            const int colIndex = modelIndex.column();
-            for(const RaceData& data: datas)
+        StatisticsData statistics;
+        switch(m_currentFilterType) {
+            case FilterDiscipline:
+            case FilterLeaver:
+            case FilterDistance:
+            case FilterYellow:
+            case FilterLPJ:
+            case FilterLP:
+            case FilterLPD:
             {
-                // We want all data which do not corresponding to the filter
-                if(!data.isPassFilter(rowIndex, colIndex))
+                std::vector<RaceData> datas = m_currentFilteredDatas;
+                std::vector<RaceData> tmpData;
+                for(const QModelIndex& modelIndex: p_filterList)
                 {
-                    tmpData.push_back(data);
+                    const int rowIndex = modelIndex.row();
+                    const int colIndex = modelIndex.column();
+                    for(const RaceData& data: datas)
+                    {
+                        // We want all data which do not corresponding to the filter
+                        if(!data.isPassFilter(rowIndex, colIndex))
+                        {
+                            tmpData.push_back(data);
+                        }
+                    }
+                    datas.clear();
+                    datas = tmpData;
+                    tmpData.clear();
                 }
-            }
-            datas.clear();
-            datas = tmpData;
-            tmpData.clear();
-        }
 
-        const StatisticsData statistics = generateStatistics(datas);
+                statistics = generateStatistics(datas);
+                break;
+            }
+            case FilterColorFull:
+            {
+                std::array<std::vector<RaceData>, 24> datas = m_currentFilteredDatasByColorsByColumn;
+                std::vector<RaceData> tmpData = {};
+                for(const QModelIndex& modelIndex: p_filterList) {
+                    const int rowIndex = modelIndex.row();
+                    const int colIndex = modelIndex.column();
+                    std::vector<RaceData> currentColDatas = datas[colIndex];
+                    for(const RaceData& data: currentColDatas) {
+                        if(!data.isPassFilter(rowIndex, colIndex)) {
+                            tmpData.push_back(data);
+                        }
+                    }
+                    datas[colIndex].clear();
+                    datas[colIndex] = tmpData;
+                    tmpData.clear();
+                }
+                statistics = generateStatistics(datas);
+                break;
+            }
+            case FilterColor:
+            {
+                std::map<QString, std::array<std::vector<RaceData>, 24>> datas = m_currentFilteredDatasByColors;
+                std::vector<RaceData> tmpData = {};
+                for(const QModelIndex& modelIndex: p_filterList) {
+                    const int rowIndex = modelIndex.row();
+                    const int colIndex = modelIndex.column();
+                    std::vector<RaceData> currentColDatas = {};
+                    QString currentColor = "";
+                    if((2 == rowIndex) && (datas.end() != datas.find("Green"))) {
+                        currentColDatas = datas.find("Green")->second[colIndex];
+                        currentColor = "Green";
+                    } else if((4 == rowIndex) && (datas.end() != datas.find("Blue"))) {
+                        currentColDatas = datas.find("Blue")->second[colIndex];
+                        currentColor = "Blue";
+                    } else if((5 == rowIndex) && (datas.end() != datas.find("Yellow"))) {
+                        currentColDatas = datas.find("Yellow")->second[colIndex];
+                        currentColor = "Yellow";
+                    } else if((6 == rowIndex) && (datas.end() != datas.find("Orange"))) {
+                        currentColDatas = datas.find("Orange")->second[colIndex];
+                        currentColor = "Orange";
+                    } else if((7 == rowIndex) && (datas.end() != datas.find("Blank"))) {
+                        currentColDatas = datas.find("Blank")->second[colIndex];
+                        currentColor = "Blank";
+                    }
+                    for(const RaceData& data: currentColDatas) {
+                        if(!data.isPassFilter(rowIndex, colIndex)) {
+                            tmpData.push_back(data);
+                        }
+                    }
+                    datas.find(currentColor)->second[colIndex].clear();
+                    datas.find(currentColor)->second[colIndex] = tmpData;
+                    tmpData.clear();
+                }
+                statistics = generateStatistics(datas);
+                break;
+            }
+            default:
+                break;
+        }
+        
         m_statArray.displayDatas(statistics);
     }
 
@@ -504,7 +717,26 @@ namespace controller
     void StatArrayController::onResetSubFilter()
     //--------------------------------------------------------------------------------
     {
-        const StatisticsData statistics = generateStatistics(m_currentFilteredDatas);
+        StatisticsData statistics;
+        switch(m_currentFilterType) {
+            case FilterDiscipline:
+            case FilterLeaver:
+            case FilterDistance:
+            case FilterYellow:
+            case FilterLPJ:
+            case FilterLP:
+            case FilterLPD:
+                statistics = generateStatistics(m_currentFilteredDatas);
+                break;
+            case FilterColorFull:
+                statistics = generateStatistics(m_currentFilteredDatasByColorsByColumn);
+                break;
+            case FilterColor:
+                statistics = generateStatistics(m_currentFilteredDatasByColors);
+                break;
+            default:
+                break;
+        }
         m_statArray.displayDatas(statistics);
     }
 
@@ -523,11 +755,249 @@ namespace controller
         m_statArray.changeFilterText();
         filteredDatas(p_filter, m_currentFilterType);
         StatisticsData statistics;
-        if(EFilter::FilterColor != m_currentFilterType) {
-            statistics = generateStatistics(m_currentFilteredDatas);
-        } else {
-            statistics = generateStatistics(m_currentFilteredDatasByColumn);
+        switch(m_currentFilterType) {
+            case FilterDiscipline:
+            case FilterLeaver:
+            case FilterDistance:
+            case FilterYellow:
+            case FilterLPJ:
+            case FilterLP:
+            case FilterLPD:
+                if(EFilter::FilterNone != m_currentFilter2Type) {
+                    statistics = applySecondFilter(
+                        p_filter,
+                        m_currentFilter2Type,
+                        m_currentFilteredDatas);
+                } else {
+                    statistics = generateStatistics(m_currentFilteredDatas);
+                }
+                break;
+            case FilterColorFull:
+                if(EFilter::FilterNone != m_currentFilter2Type) {
+                    statistics = applySecondFilter(
+                        p_filter,
+                        m_currentFilter2Type,
+                        m_currentFilteredDatasByColorsByColumn);
+                } else {
+                    statistics = generateStatistics(m_currentFilteredDatasByColorsByColumn);
+                }
+                break;
+            case FilterColor:
+                if(EFilter::FilterNone != m_currentFilter2Type) {
+                    statistics = applySecondFilter(
+                        p_filter,
+                        m_currentFilter2Type,
+                        m_currentFilteredDatasByColors);
+                } else {
+                    statistics = generateStatistics(m_currentFilteredDatasByColors);
+                }
+                break;
+            default:
+                break;
         }
         m_statArray.displayDatas(statistics);
+    }
+
+    //--------------------------------------------------------------------------------
+    void StatArrayController::changeStatFilter2(const Filter& p_filter)
+    //--------------------------------------------------------------------------------
+    {
+        if(m_currentFilter2Type == m_filter3)
+        {
+            m_currentFilter2Type = m_filter4;
+        }
+        else
+        {
+            m_currentFilter2Type = m_filter3;
+        }
+        m_statArray.changeFilter2Text();
+        filteredDatas(p_filter, m_currentFilterType);
+        StatisticsData statistics;
+        switch(m_currentFilterType) {
+            case FilterDiscipline:
+            case FilterLeaver:
+            case FilterDistance:
+            case FilterYellow:
+            case FilterLPJ:
+            case FilterLP:
+            case FilterLPD:
+                if(EFilter::FilterNone != m_currentFilter2Type) {
+                    statistics = applySecondFilter(
+                        p_filter,
+                        m_currentFilter2Type,
+                        m_currentFilteredDatas);
+                } else {
+                    statistics = generateStatistics(m_currentFilteredDatas);
+                }
+                break;
+            case FilterColorFull:
+                if(EFilter::FilterNone != m_currentFilter2Type) {
+                    statistics = applySecondFilter(
+                        p_filter,
+                        m_currentFilter2Type,
+                        m_currentFilteredDatasByColorsByColumn);
+                } else {
+                    statistics = generateStatistics(m_currentFilteredDatasByColorsByColumn);
+                }
+                break;
+            case FilterColor:
+                if(EFilter::FilterNone != m_currentFilter2Type) {
+                    statistics = applySecondFilter(
+                        p_filter,
+                        m_currentFilter2Type,
+                        m_currentFilteredDatasByColors);
+                } else {
+                    statistics = generateStatistics(m_currentFilteredDatasByColors);
+                }
+                break;
+            default:
+                break;
+        }
+        m_statArray.displayDatas(statistics);
+    }
+
+    //--------------------------------------------------------------------------------
+    const StatisticsData StatArrayController::applySecondFilter(
+        const Filter& p_currentFilter,
+        const EFilter& p_filter,
+        const std::vector<RaceData>& p_filteredDatas)
+    //--------------------------------------------------------------------------------
+    {
+        std::vector<RaceData> tmpDatas = {};
+        for(const RaceData& data: p_filteredDatas) {
+            switch(p_filter) {
+                case FilterLPJ:
+                {
+                    const int yellowCounter = computeYellow(m_currentRaceDatas, data.totalDatas());
+                    if(isFilterLPJ(p_currentFilter,
+                                   data.discipline,
+                                   data.nbrLeaver,
+                                   yellowCounter))
+                    {
+                        tmpDatas.push_back(data);
+                    }
+                    break;
+                }
+                case FilterLP:
+                {
+                    if(isFilterLP(p_currentFilter,
+                                   data.discipline,
+                                   data.nbrLeaver))
+                    {
+                        tmpDatas.push_back(data);
+                    }
+                    break;
+                }
+                default:
+                    qWarning() << "Filter not yet implement" << p_filter;
+                    break;
+            }
+        }
+
+        m_currentFilteredDatas.clear();
+        m_currentFilteredDatas = tmpDatas;
+
+        return generateStatistics(tmpDatas);
+    }
+
+    //--------------------------------------------------------------------------------
+    const StatisticsData StatArrayController::applySecondFilter(
+        const Filter& p_currentFilter,
+        const EFilter& p_filter,
+        const std::array<std::vector<RaceData>, 24>& p_filteredDatas)
+    //--------------------------------------------------------------------------------
+    {
+        std::array<std::vector<RaceData>, 24> tmpDatas = {};
+        for(size_t index = 0; index < p_filteredDatas.size(); ++index) {
+            const std::vector<RaceData>& dataByColumn = p_filteredDatas[index];
+            std::vector<RaceData> vectorDatas = {};
+            for(const RaceData& data: dataByColumn) {
+                switch(p_filter) {
+                    case FilterLPJ:
+                    {
+                        const int yellowCounter = computeYellow(m_currentRaceDatas, data.totalDatas());
+                        if(isFilterLPJ(p_currentFilter,
+                                    data.discipline,
+                                    data.nbrLeaver,
+                                    yellowCounter))
+                        {
+                            vectorDatas.push_back(data);
+                        }
+                        break;
+                    }
+                    case FilterLP:
+                    {
+                        if(isFilterLP(p_currentFilter,
+                                    data.discipline,
+                                    data.nbrLeaver))
+                        {
+                            vectorDatas.push_back(data);
+                        }
+                        break;
+                    }
+                    default:
+                        qWarning() << "Filter not yet implement" << p_filter;
+                        break;
+                }
+            }
+            tmpDatas[index] = vectorDatas;
+        }
+
+        m_currentFilteredDatasByColorsByColumn = tmpDatas;
+
+        return generateStatistics(m_currentFilteredDatasByColorsByColumn);
+    }
+
+    //--------------------------------------------------------------------------------
+    const StatisticsData StatArrayController::applySecondFilter(
+        const Filter& p_currentFilter,
+        const EFilter& p_filter,
+        const std::map<QString, std::array<std::vector<RaceData>, 24>>& p_filteredDatas)
+    //--------------------------------------------------------------------------------
+    {
+        std::map<QString, std::array<std::vector<RaceData>, 24>> tmpDatas = {};
+        for(std::map<QString, std::array<std::vector<RaceData>, 24>>::const_iterator it = p_filteredDatas.begin();
+            it != p_filteredDatas.end();
+            ++it) {
+            std::array<std::vector<RaceData>, 24> arrayDatas = {};
+            for(size_t index = 0; index < it->second.size(); ++index) {
+                const std::vector<RaceData>& dataByColumn = it->second[index];
+                std::vector<RaceData> vectorDatas = {};
+                for(const RaceData& data: dataByColumn) {
+                    switch(p_filter) {
+                        case FilterLPJ:
+                        {
+                            const int yellowCounter = computeYellow(m_currentRaceDatas, data.totalDatas());
+                            if(isFilterLPJ(p_currentFilter,
+                                        data.discipline,
+                                        data.nbrLeaver,
+                                        yellowCounter))
+                            {
+                                vectorDatas.push_back(data);
+                            }
+                            break;
+                        }
+                        case FilterLP:
+                        {
+                            if(isFilterLP(p_currentFilter,
+                                        data.discipline,
+                                        data.nbrLeaver))
+                            {
+                                vectorDatas.push_back(data);
+                            }
+                            break;
+                        }
+                        default:
+                            qWarning() << "Filter not yet implement" << p_filter;
+                            break;
+                    }
+                }
+                arrayDatas[index] = vectorDatas;
+            }
+            tmpDatas[it->first] = arrayDatas;
+        }
+
+        m_currentFilteredDatasByColors = tmpDatas;
+        return generateStatistics(m_currentFilteredDatasByColors);
     }
 }

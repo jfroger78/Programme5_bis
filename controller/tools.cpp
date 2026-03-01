@@ -214,6 +214,10 @@ const QString Tools::convertFilterToString(const EFilter& p_filter)
             return "L+P";
         case FilterLPD:
             return "L+P+D";
+        case FilterColorFull:
+            return "Color full";
+        case FilterColor:
+            return "Color";
         case FilterNone:
             return "";
         default:

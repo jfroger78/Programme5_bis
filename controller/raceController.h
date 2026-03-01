@@ -140,9 +140,15 @@ namespace controller {
 
         /**
          * @brief Changes the filter set to define percent.
-         * @param The controller affected by the filter change.
+         * @param p_controller: The controller affected by the filter change.
          */
         void onChangeStatFilter(StatArrayController* p_controller);
+
+        /**
+         * @brief Changes the second filter set to define percent.
+         * @param p_controller: The controller affected by the filter change
+         */
+        void onChangeStatFilter2(StatArrayController* p_controller);
 
     private:
         view::Course* m_course; //!< Pointer to the course being controlled.

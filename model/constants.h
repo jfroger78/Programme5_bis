@@ -58,7 +58,8 @@ enum EFilter
     FilterLPJ, // Discipine + Leaver + Yellow
     FilterLP, // Discipline + Leaver
     FilterLPD, // Discipline + Leaver + Distance
-    FilterColor
+    FilterColor,
+    FilterColorFull
 };
 
 struct ColorsValue {
