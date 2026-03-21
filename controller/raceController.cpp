@@ -78,6 +78,7 @@ namespace controller {
             bdd.setIsFilterByCombination(m_course->isFilterByCombination());
             const std::vector<RaceData> fullCombinationBDDDatas = bdd.raceDataByCombination(m_course->combinationString());
 
+            m_statLPJArrayController->setRace(m_course);
             m_statLPJArrayController->setFullDatas(fullCombinationBDDDatas);
             m_statLPJArrayController->setCurrentRaceDatas(totalUsed);
             m_statLPJArrayController->onStartFilter(convertFilter(filter));
@@ -98,6 +99,7 @@ namespace controller {
                 m_statLPJArrayController->setChangeFilterConnected(value & value2);
             }
 
+            m_statLPDArrayController->setRace(m_course);
             m_statLPDArrayController->setFullDatas(fullCombinationBDDDatas);
             m_statLPDArrayController->setCurrentRaceDatas(totalUsed);
             m_statLPDArrayController->onStartFilter(convertFilter(filter));
@@ -120,6 +122,7 @@ namespace controller {
                 
             }
 
+            m_statColorArrayController->setRace(m_course);
             m_statColorArrayController->setFullDatas(fullCombinationBDDDatas);
             m_statColorArrayController->setCurrentRaceDatas(totalUsed);
             m_statColorArrayController->onStartFilter(convertFilter(filter));
@@ -171,7 +174,7 @@ namespace controller {
         filter.yellowMin = m_course->yellowMin();
         filter.distance = m_course->distanceFilter();
 
-        filter.colorFilter = m_course->numberOfColor();
+        filter.numberFilter = m_course->numberOfNumbers();
 
         return filter;
     }
@@ -270,7 +273,7 @@ namespace controller {
         result.distance = p_filterToConvert.distance;
         result.horses = p_filterToConvert.horses;
 
-        result.colorFilter = p_filterToConvert.colorFilter;
+        result.numberFilter = p_filterToConvert.numberFilter;
 
         return result;
     }

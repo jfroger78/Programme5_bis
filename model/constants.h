@@ -62,24 +62,15 @@ enum EFilter
     FilterColorFull
 };
 
-struct ColorsValue {
-    int greenNumber = 0;
-    int blueNumber = 0;
-    int yellowNumber = 0;
-    int orangeNumber = 0;
-    int blankNumber = 0;
-
-    void colorData(const QString& p_color) {
-        if(0 == p_color.compare(GREEN_COLOR, Qt::CaseInsensitive)) {
-            greenNumber++;
-        } else if(0 == p_color.compare(BLUE_COLOR, Qt::CaseInsensitive)) {
-            blueNumber++;
-        } else if(0 == p_color.compare(YELLOW_COLOR, Qt::CaseInsensitive)) {
-            yellowNumber++;
-        } else if(0 == p_color.compare(ORANGE_COLOR, Qt::CaseInsensitive)) {
-            orangeNumber++;
+struct NumberValue {
+    std::map<int, int> numbersValue;
+    
+    void numberData(const int p_value) {
+        std::map<int, int>::iterator it = numbersValue.find(p_value);
+        if(it != numbersValue.end()) {
+            it->second++;
         } else {
-            blankNumber++;
+            numbersValue.insert(std::pair<int, int>(p_value, 1));
         }
     }
 };
@@ -89,7 +80,7 @@ struct Filter
     QString letterStrict = QString(); //!< Strict letter filter.
     QString letterMin = QString(); //!< Minimum letter filter.
 
-    std::map<int, ColorsValue> colorFilter;
+    std::map<int, NumberValue> numberFilter;
 
     /**
      * @brief Returns true if the letter passes the filter, false otherwise.
@@ -221,11 +212,11 @@ struct RaceData
 
         /**
          * @brief Checks if the winner datas pass the sub filter.
-         * @param p_row: The selected row for the filter.
+         * @param p_value: The value to check if winner pass data.
          * @param p_column: The selected column for the filter.
          * @return True if it passes the filter, false otherwise.
          */
-        const bool isPassFilter(const int p_row, const int p_column) const;
+        const bool isWinnerPassFilter(const int p_value, const int p_column) const;
 
         /**
          * @brief Checks if the value corresponding to the filter.
@@ -244,10 +235,10 @@ struct RaceData
         const bool colorInColumn(const QString p_color, const int p_column) const;
 
         /**
-         * @brief Compute the number of each color for each column.
-         * @return A map by color of it's number by column.
+         * @brief Compute the number of each number for each column.
+         * @return A map by number of it's number by column.
          */
-        const std::map<int, ColorsValue> numberOfColor() const;
+        const std::map<int, NumberValue> numberOfNumbers() const;
 
     private:
         /**

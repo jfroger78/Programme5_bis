@@ -144,12 +144,12 @@ const std::array<int, 24> RaceData::winnerDatas() const
                                   -1, -1, -1, -1, -1, -1, -1, -1};
     for(size_t index = 0; index < colIndexes.size(); ++index)
     {
-        const int colIndex = colIndexes[index];
         const int rowIndex = winnerRow();
         if(-1 == rowIndex)
         {
             return result;
         }
+        const int colIndex = colIndexes[index];
         result[index] = en2[rowIndex][colIndex].value;
         result[index + 8] = en3[rowIndex][colIndex].value;
         result[index + 16] = en2En3[rowIndex][colIndex].value;
@@ -258,13 +258,10 @@ QString RaceData::convertValueToOOrX(const int p_value, const std::array<int, 8>
 }
 
 //----------------------------------------------------
-const bool RaceData::isPassFilter(const int p_row, const int p_column) const
+const bool RaceData::isWinnerPassFilter(const int p_value, const int p_column) const
 //----------------------------------------------------
 {
-    ERowArrayValue filter = static_cast<ERowArrayValue>(p_row);
-    bool isConverted = false;
-    const std::array<CompareValue, 24> datas = convertValue(isConverted);
-    return ((true == isConverted) ? filtered(filter, datas[p_column]) : false);
+    return winnerDatas()[p_column] == p_value;
 }
 
 //----------------------------------------------------
@@ -327,27 +324,27 @@ const bool RaceData::colorInColumn(const QString p_color, const int p_column) co
 }
 
 //----------------------------------------------------
-const std::map<int, ColorsValue> RaceData::numberOfColor() const
+const std::map<int, NumberValue> RaceData::numberOfNumbers() const
 //----------------------------------------------------
 {
-    std::map<int, ColorsValue> ret;
+    std::map<int, NumberValue> ret;
     for(int row = 0; row < en2.size() - 1; ++row) {
         for(int col = 0; col < colIndexes.size(); ++col) {
             const int currentColIndex = colIndexes[col];
             // En2
             {
                 en2En3Struct en2Data = en2[row][currentColIndex];
-                ret[col].colorData(convertColor(en2Data.color));
+                ret[col].numberData(en2Data.value);
             }
             // En3
             {
                 en2En3Struct en3Data = en3[row][currentColIndex];
-                ret[col + 8].colorData(convertColor(en3Data.color));
+                ret[col + 8].numberData(en3Data.value);
             }
             //En2En3
             {
                 en2En3Struct en2En3Data = en2En3[row][currentColIndex];
-                ret[col + 16].colorData(convertColor(en2En3Data.color));
+                ret[col + 16].numberData(en2En3Data.value);
             }
         }
     }

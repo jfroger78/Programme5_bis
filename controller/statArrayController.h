@@ -12,6 +12,7 @@
 // Custom includes
 #include "../model/constants.h"
 #include "../view/statArray.h"
+#include "../view/course.h"
 
 namespace controller
 {
@@ -81,6 +82,8 @@ namespace controller
             {
                 return m_isChangeFilterConnected;
             }
+
+            void setRace(view::Course* p_currentRace);
 
         public:
             //-----------------------------
@@ -172,7 +175,7 @@ namespace controller
              * @param p_filter: The filter which contains color of current race.
              * @return A filtered list of RaceData.
              */
-            std::map<QString, std::array<std::vector<RaceData>, 24>> startColorFilter(const Filter& p_filter);
+            std::map<int, std::array<std::vector<RaceData>, 24>> startColorFilter(const Filter& p_filter);
 
             /**
              * @brief Computes the number of yellow from the current DB race.
@@ -202,15 +205,7 @@ namespace controller
              * @param p_filteredData: The datas which pass filters.
              * @return The statistics.
              */
-            const StatisticsData generateStatistics(const std::map<QString, std::array<std::vector<RaceData>, 24>>& p_filteredDatas);
-
-            /**
-             * @brief Computes the number winner green compare to the total of green in the column.
-             * @param p_data: The data of the race.
-             * @param p_statistics: The statistics to fill.
-             */
-            void computeGreenWinner(const RaceData& p_data,
-                                    StatisticsData& p_statistics);
+            const StatisticsData generateStatistics(const std::map<int, std::array<std::vector<RaceData>, 24>>& p_filteredDatas);
 
             /**
              * @brief Applies the second filter.
@@ -246,7 +241,9 @@ namespace controller
             const StatisticsData applySecondFilter(
                 const Filter& p_currentFilter,
                 const EFilter& p_filter,
-                const std::map<QString, std::array<std::vector<RaceData>, 24>>& p_filteredDatas);
+                const std::map<int, std::array<std::vector<RaceData>, 24>>& p_filteredDatas);
+
+            const StatisticsData findRowNumbers(const bool p_isArray = false);
         private:
             //-----------------------------
             //          SLOTS
@@ -265,7 +262,7 @@ namespace controller
             std::vector<RaceData> m_fullDatas; //!< The full datas extract from DB.
             std::vector<RaceData> m_currentFilteredDatas; //!< The datas filter by the current used filter.
             std::array<std::vector<RaceData>, 24> m_currentFilteredDatasByColorsByColumn; //!< The datas filter by the current used filter by column.
-            std::map<QString, std::array<std::vector<RaceData>, 24>> m_currentFilteredDatasByColors; //!< The datas filter by the color row and by column.
+            std::map<int, std::array<std::vector<RaceData>, 24>> m_currentFilteredDatasByNumbers; //!< The datas filter by the color row and by column.
 
             EFilter m_currentFilterType; //!< The current used filter to this array.
             EFilter m_filter1; //!< The first filter associated to this array.
@@ -279,6 +276,8 @@ namespace controller
             std::array<int, 24> m_currentRaceDatas; //!< The current race datas.
 
             bool m_isChangeFilterConnected; //!< True if the change filter is already connected, false otherwise.
+            
+            view::Course* m_currentRace; //!< The current race.
     };
 }
 

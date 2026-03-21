@@ -7,30 +7,14 @@
 struct StatisticsData
 {
     // Value
-    std::array<int, 24> arrayCircle = {};
-    std::array<int, 24> arrayGreen = {};
-    std::array<int, 24> arrayBlue = {};
-    std::array<int, 24> arrayYellow = {};
-    std::array<int, 24> arrayOrange = {};
-    std::array<int, 24> arrayBlank = {};
+    std::map<int, std::array<int, 24>> datas;
+    std::array<std::map<int, int>, 24> datasByColumn;
     
     // Totals
-    int total;
+    int total = -1;
     std::array<int, 24> totalByColumn = {-1};
-    std::array<int, 24> totalGreen = {};
-    std::array<int, 24> totalBlue = {};
-    std::array<int, 24> totalYellow = {};
-    std::array<int, 24> totalOrange = {};
-    std::array<int, 24> totalBlank = {};
+    std::map<int, std::array<int, 24>> totalByColumnByValue = {};
 
-
-    // Data to compute V gagnant
-    std::array<int, 24> arrayGreenWinner = {};
-    std::array<int, 24> arrayGreenWinnerTotal = {};
-
-    // Data to compute V m gagnant
-    std::array<int, 24> arrayMGreenWinner = {};
-    std::array<int, 24> arrayMGreenWinnerTotal = {};
 };
 
 #endif // STATISTIC_H

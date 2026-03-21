@@ -98,10 +98,10 @@ namespace view {
     }
 
     //---------------------------------------------
-    const std::map<int, ColorsValue> Course::numberOfColor()
+    const std::map<int, NumberValue> Course::numberOfNumbers()
     //---------------------------------------------
     {
-        std::map<int, ColorsValue> ret;
+        std::map<int, NumberValue> ret;
 
         for(int index = 0; index < colIndexes.size(); ++index)
         {
@@ -111,17 +111,17 @@ namespace view {
                 // En2
                 {
                     QModelIndex modelIndex = modelEn2()->index(rowIndex, currentIndex);
-                    fillColorArray(modelEn2(), modelIndex, index, ret);
+                    fillNumberArray(modelEn2(), modelIndex, index, ret);
                 }
                 // En3
                 {
                     QModelIndex modelIndex = modelEn3()->index(rowIndex, currentIndex);
-                    fillColorArray(modelEn3(), modelIndex, index + 8, ret);
+                    fillNumberArray(modelEn3(), modelIndex, index + 8, ret);
                 }
                 // En2En3
                 {
                     QModelIndex modelIndex = modelEn2En3()->index(rowIndex, currentIndex);
-                    fillColorArray(modelEn2En3(), modelIndex, index + 16, ret);
+                    fillNumberArray(modelEn2En3(), modelIndex, index + 16, ret);
                 }
             }
         }
@@ -647,21 +647,18 @@ namespace view {
     }
 
     //-----------------------------------------------------------------------------
-    void Course::fillColorArray(const QAbstractItemModel* p_model,
+    void Course::fillNumberArray(const QAbstractItemModel* p_model,
                                 const QModelIndex& p_index,
                                 const int p_columnIndex,
-                                std::map<int, ColorsValue>& p_colorArray)
+                                std::map<int, NumberValue>& p_numberArray)
     //-----------------------------------------------------------------------------
     {
-        QVariant background = p_model->data(p_index, Qt::BackgroundRole);
-        QVariant value = p_model->data(p_index);
-        if(background.canConvert<QBrush>())
+        int value = -1;
+        if(p_model->data(p_index).canConvert<int>())
         {
-            QBrush brush = background.value<QBrush>();
-            p_colorArray[p_columnIndex].colorData(brush.color().name());
-        } else {
-            p_colorArray[p_columnIndex].colorData(BLANK_COLOR);
+            value = p_model->data(p_index).toInt();   
         }
+        p_numberArray[p_columnIndex].numberData(value);
     }
 
 }

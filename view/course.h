@@ -262,7 +262,7 @@ namespace view {
          * @brief Compute the number of the input color in the input columnIndex
          * @return A map which contain, by color, the number of time where it appears by column.
          */
-        const std::map<int, ColorsValue> numberOfColor();
+        const std::map<int, NumberValue> numberOfNumbers();
 
     private:
         /**
@@ -338,10 +338,10 @@ namespace view {
          * @param p_colIndex The column index.
          * @param p_colorArray The array to fill.
          */
-        void fillColorArray(const QAbstractItemModel* p_model,
+        void fillNumberArray(const QAbstractItemModel* p_model,
                             const QModelIndex& p_index,
                             const int p_colIndex,
-                            std::map<int, ColorsValue>& p_colorArray);
+                            std::map<int, NumberValue>& p_colorArray);
 
     private:
         Ui::Course *m_ui;//!< Pointer to the user interface

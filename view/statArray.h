@@ -122,6 +122,18 @@ namespace view
              */
             void reset2Text();
 
+            /**
+             * @brief Return the model of the array.
+             * @param The abstractItemModel of the array.
+             */
+            QAbstractItemModel* model() const;
+
+            /**
+             * @brief Returns true if the second filter is activated, false otherwise.
+             * @return True if the second filter is activated, false otherwise.
+             */
+            const bool isSecondFilterActivated() const;
+
         public:
             /**
              * @brief Starts the sub filters.
@@ -160,13 +172,13 @@ namespace view
             
             /**
              * @brief Sets the circle percent into the standard item model.
-             * @param p_rowIndex: The row index.
+             * @param p_colIndex: The column index.
              * @param p_percents: The percents to display.
              * @param p_totals: Totals with which divided current percent.
              * @param p_model: The model in which display the percent.
              */
-            void setPercent(const int p_rowIndex,
-                            const std::array<int, 24>& p_percents,
+            void setPercent(const int p_colIndex,
+                            const std::map<int, int>& p_percents,
                             const std::array<int, 24>& p_totals,
                             QStandardItemModel* p_model);
 

@@ -16,7 +16,7 @@ Programme_cinco::Programme_cinco(QWidget *p_parent)
 //-----------------------------------------------
 {
     m_ui->setupUi(this);
-    setWindowTitle("Programme cinquo bis");
+    setWindowTitle("Programme cinquo bis chiffre");
     setupUi();
     connection();
 }

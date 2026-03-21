@@ -21,6 +21,7 @@ namespace view
         m_ui->m_statGroupBox->setTitle(m_filters.filter1Str());
         m_ui->m_changeStatBtn->setVisible(!(m_filters.filter1Str().isEmpty() || m_filters.filter2Str().isEmpty()));
         m_ui->m_changeStatBtn2->setVisible(!(m_filters.filter3Str().isEmpty() || m_filters.filter4Str().isEmpty()));
+        m_ui->m_activeSecondFilter->setVisible(!(m_filters.filter3Str().isEmpty() || m_filters.filter4Str().isEmpty()));
         m_ui->m_changeStatBtn->setText(m_filters.filter2Str());
         m_ui->m_changeStatBtn2->setText(m_filters.filter4Str());
         m_ui->m_statDatas->setMinimumHeight(275);
@@ -80,135 +81,56 @@ namespace view
         QStringList rowHeaders;
         // Sets percents
         int rowIndex = 0;
-
-        if(-1 == p_datasToDisplay.totalByColumn[0]) {
-            // O
-            rowHeaders.push_back("O");
-            setPercent(rowIndex,
-                    p_datasToDisplay.arrayCircle,
-                    p_datasToDisplay.total,
-                    statModel);
-            rowIndex++;
-
-            // V%O
-            rowHeaders.push_back("V\%O");
-            setPercent(rowIndex,
-                    p_datasToDisplay.arrayGreen,
-                    p_datasToDisplay.arrayCircle,
-                    statModel);
-            rowIndex++;
-
-            // Vert
-            rowHeaders.push_back("Vert");
-            setPercent(rowIndex,
-                    p_datasToDisplay.arrayGreen,
-                    p_datasToDisplay.totalGreen,
-                    statModel);
-            rowIndex++;
-
-            // V gagnant
-            rowHeaders.push_back("V gagnant");
-            setPercent(rowIndex,
-                    p_datasToDisplay.arrayGreenWinner,
-                    p_datasToDisplay.arrayGreenWinnerTotal,
-                    statModel);
-            rowIndex++;
-
-            // Bleu
-            rowHeaders.push_back("Bleu");
-            setPercent(rowIndex,
-                    p_datasToDisplay.arrayBlue,
-                    p_datasToDisplay.totalBlue,
-                    statModel);
-            rowIndex++;
-
-            // Jaune
-            rowHeaders.push_back("Jaune");
-            setPercent(rowIndex,
-                    p_datasToDisplay.arrayYellow,
-                    p_datasToDisplay.totalYellow,
-                    statModel);
-            rowIndex++;
-
-            // Orange
-            rowHeaders.push_back("Orange");
-            setPercent(rowIndex,
-                    p_datasToDisplay.arrayOrange,
-                    p_datasToDisplay.totalOrange,
-                    statModel);
-            rowIndex++;
-
-            // Blanc
-            rowHeaders.push_back("Blanc");
-            setPercent(rowIndex,
-                    p_datasToDisplay.arrayBlank,
-                    p_datasToDisplay.totalBlank,
-                    statModel);
+        if(-1 != p_datasToDisplay.total) {
+            for(std::map<int, std::array<int, 24>>::const_iterator it = p_datasToDisplay.datas.begin();
+                it != p_datasToDisplay.datas.end();
+                ++it) {
+                rowHeaders.push_back(QString::number(it->first));
+                setPercent(rowIndex,
+                        it->second,
+                        p_datasToDisplay.total,
+                        statModel);
+                rowIndex++;
+            }
+        } else if(-1 != p_datasToDisplay.totalByColumn[0]) {
+            const std::map<int, int> rowHeader = p_datasToDisplay.datasByColumn[0];
+            for(std::pair<int, int> pair: rowHeader) {
+                rowHeaders.push_back(QString::number(pair.first));
+            }
+            for(int colIndex = 0; colIndex < p_datasToDisplay.datasByColumn.size(); ++colIndex) {
+                setPercent(colIndex,
+                        p_datasToDisplay.datasByColumn[colIndex],
+                        p_datasToDisplay.totalByColumn,
+                        statModel);
+            }
         } else {
-            // O
-            rowHeaders.push_back("O");
-            setPercent(rowIndex,
-                    p_datasToDisplay.arrayCircle,
-                    p_datasToDisplay.totalByColumn,
-                    statModel);
-            rowIndex++;
+            const std::map<int, int> rowHeader = p_datasToDisplay.datasByColumn[0];
+            for(std::pair<int, int> pair: rowHeader) {
+                rowHeaders.push_back(QString::number(pair.first));
+            }
 
-            // V%O
-            rowHeaders.push_back("V\%O");
-            setPercent(rowIndex,
-                    p_datasToDisplay.arrayGreen,
-                    p_datasToDisplay.arrayCircle,
-                    statModel);
-            rowIndex++;
-
-            // Vert
-            rowHeaders.push_back("Vert");
-            setPercent(rowIndex,
-                    p_datasToDisplay.arrayGreen,
-                    p_datasToDisplay.totalByColumn,
-                    statModel);
-            rowIndex++;
-
-            // V gagnant
-            rowHeaders.push_back("V gagnant");
-            setPercent(rowIndex,
-                    p_datasToDisplay.arrayGreenWinner,
-                    p_datasToDisplay.arrayGreenWinnerTotal,
-                    statModel);
-            rowIndex++;
-
-            // Bleu
-            rowHeaders.push_back("Bleu");
-            setPercent(rowIndex,
-                    p_datasToDisplay.arrayBlue,
-                    p_datasToDisplay.totalByColumn,
-                    statModel);
-            rowIndex++;
-
-            // Jaune
-            rowHeaders.push_back("Jaune");
-            setPercent(rowIndex,
-                    p_datasToDisplay.arrayYellow,
-                    p_datasToDisplay.totalByColumn,
-                    statModel);
-            rowIndex++;
-
-            // Orange
-            rowHeaders.push_back("Orange");
-            setPercent(rowIndex,
-                    p_datasToDisplay.arrayOrange,
-                    p_datasToDisplay.totalByColumn,
-                    statModel);
-            rowIndex++;
-
-            // Blanc
-            rowHeaders.push_back("Blanc");
-            setPercent(rowIndex,
-                    p_datasToDisplay.arrayBlank,
-                    p_datasToDisplay.totalByColumn,
-                    statModel);
+            for(int indexCol = 0; indexCol < p_datasToDisplay.datasByColumn.size(); ++indexCol) {
+                std::map<int, int> colValues = p_datasToDisplay.datasByColumn[indexCol];
+                int rowIndex = 0;
+                for(std::pair<int, int> rowValues: colValues) {
+                    QStandardItem* percentValue = nullptr;
+                    if(p_datasToDisplay.totalByColumnByValue.end() != p_datasToDisplay.totalByColumnByValue.find(rowValues.first)) {
+                        const float total = p_datasToDisplay.totalByColumnByValue.find(rowValues.first)->second[indexCol];
+                        if(0 == total) {
+                            percentValue = new QStandardItem("0");
+                        } else {
+                            const float value = rowValues.second;
+                            percentValue = new QStandardItem(QString::number((value / total) * 100, 'f', 2));
+                        }
+                    } else {
+                        percentValue = new QStandardItem("0");
+                    }
+                    statModel->setItem(rowIndex, indexCol, percentValue);
+                    ++rowIndex;
+                }
+            }
         }
-        
+
         statModel->setVerticalHeaderLabels(rowHeaders);
         getLittleOne(*statModel);
         m_ui->m_statDatas->setModel(statModel);
@@ -273,6 +195,20 @@ namespace view
     }
 
     //-------------------------------------------
+    QAbstractItemModel* StatArray::model() const
+    //-------------------------------------------
+    {
+        return m_ui->m_statDatas->model();
+    }
+
+    //-------------------------------------------
+    const bool StatArray::isSecondFilterActivated() const
+    //-------------------------------------------
+    {
+        return m_ui->m_activeSecondFilter->isChecked();
+    }
+
+    //-------------------------------------------
     void StatArray::setPercent(const int p_rowIndex,
                                const std::array<int, 24>& p_percents,
                                const int p_total,
@@ -298,26 +234,26 @@ namespace view
     }
 
     //-------------------------------------------
-    void StatArray::setPercent(const int p_rowIndex,
-                               const std::array<int, 24>& p_percents,
+    void StatArray::setPercent(const int p_colIndex,
+                               const std::map<int, int>& p_percents,
                                const std::array<int, 24>& p_totals,
                                QStandardItemModel* p_model)
     //-------------------------------------------
     {
-        for(size_t colIndex = 0; colIndex < p_percents.size(); ++colIndex)
-        {
-            const float percent = p_percents[colIndex];
-            const float total = p_totals[colIndex];
-            QStandardItem* percentItem = nullptr;
-            if(0 == total)
-            {
-                percentItem = new QStandardItem("0");
+        int rowIndex = 0;
+        for(std::map<int, int>::const_iterator it = p_percents.begin();
+            it != p_percents.end();
+            ++it) {
+            const float value = it->second;
+            const float total = p_totals[p_colIndex];
+            QStandardItem* percentValue = nullptr;
+            if(0 == total) {
+                percentValue = new QStandardItem("0");
+            } else {
+                percentValue = new QStandardItem(QString::number((value / total) * 100, 'f', 2));
             }
-            else
-            {
-                percentItem = new QStandardItem(QString::number((percent / total) * 100, 'f', 2));
-            }
-            p_model->setItem(p_rowIndex, colIndex, percentItem);
+            p_model->setItem(rowIndex, p_colIndex, percentValue);
+            rowIndex++;
         }
     }
 
