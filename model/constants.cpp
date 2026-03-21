@@ -13,13 +13,13 @@ const bool Filter::isLetterFilter(const QString& p_letterToFilter) const
         return true;
     }
 
-    if((!letterStrict.isEmpty()) && (0 == letterStrict.compare(p_letterToFilter, Qt::CaseInsensitive)))
+    if(!letterStrict.isEmpty())
     {
-        return true;
+        return (0 == letterStrict.compare(p_letterToFilter, Qt::CaseInsensitive));
     }
-    else if((!letterMin.isEmpty()) && (0 == letterMin.compare(p_letterToFilter, Qt::CaseInsensitive)))
+    else if(!letterMin.isEmpty())
     {
-        return true;
+        return letterMin.contains(p_letterToFilter);
     }
 
     return false;
