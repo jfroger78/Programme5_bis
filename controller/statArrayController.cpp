@@ -586,7 +586,15 @@ namespace controller
                 currentComposition.column = "4";
             }
 
-            if(!m_tmpFilteredDatas.empty()) {
+            bool secondTmpFilteredIsEmpty = true;
+            for(std::vector<RaceData> datas: m_tmpFilteredDatasByColorsByColumn) {
+                if(!datas.empty()) {
+                    secondTmpFilteredIsEmpty = false;
+                    break;
+                }
+            }
+
+            if(0 != m_tmpFilteredDatas.size()) {
                 for(const RaceData& data: m_tmpFilteredDatas) {
                     if(data.isWinnerPassFilter(rowNumber, colIndex)) {
                         keepRaces.push_back(data.winner);
@@ -594,7 +602,7 @@ namespace controller
                         removeRaces.push_back(data.winner);
                     }
                 }
-            } else if(!m_tmpFilteredDatasByColorsByColumn.empty()) {
+            } else if(!secondTmpFilteredIsEmpty) {
                 std::vector<RaceData> currentColDatas = m_tmpFilteredDatasByColorsByColumn[colIndex];
                 for(const RaceData& data: currentColDatas) {
                     if(data.isWinnerPassFilter(rowNumber, colIndex)) {
@@ -603,7 +611,7 @@ namespace controller
                         removeRaces.push_back(data.winner);
                     }
                 }
-            } else if(!m_tmpFilteredDatasByNumbers.empty()) {
+            } else if(0 != m_tmpFilteredDatasByNumbers.size()) {
                 const std::map<int, std::array<std::vector<RaceData>, 24>>::iterator it = m_tmpFilteredDatasByNumbers.find(rowNumber);
                 if(m_tmpFilteredDatasByNumbers.end() != it) {
                     std::vector<RaceData> datas = it->second[colIndex];
