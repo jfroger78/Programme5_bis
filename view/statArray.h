@@ -140,6 +140,12 @@ namespace view
              */
             const bool isSecondFilterActivated() const;
 
+            /**
+             * @brief Returns true if the sub filter needs to be inverse.
+             * @return True if the sub filter needs to be inverse, false otherwise.
+             */
+            const bool isInverseSubFilter() const;
+
         public:
             /**
              * @brief Starts the sub filters.

@@ -237,6 +237,13 @@ namespace view
     }
 
     //-------------------------------------------
+    const bool StatArray::isInverseSubFilter() const
+    //-------------------------------------------
+    {
+        return m_ui->m_subFilterType->isChecked();
+    }    
+
+    //-------------------------------------------
     void StatArray::setPercent(const int p_rowIndex,
                                const std::array<int, 24>& p_percents,
                                const int p_total,

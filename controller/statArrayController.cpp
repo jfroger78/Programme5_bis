@@ -496,7 +496,7 @@ namespace controller
                     for(const RaceData& data: datas)
                     {
                         // We want all data which do not corresponding to the filter
-                        if(!data.isWinnerPassFilter(value, colIndex))
+                        if(m_statArray.isInverseSubFilter() == data.isWinnerPassFilter(value, colIndex))
                         {
                             tmpData.push_back(data);
                         }
@@ -519,7 +519,7 @@ namespace controller
                     const int value = statArrayHMI().model()->headerData(rowIndex, Qt::Vertical).toInt();
                     std::vector<RaceData> currentColDatas = datas[colIndex];
                     for(const RaceData& data: currentColDatas) {
-                        if(!data.isWinnerPassFilter(value, colIndex)) {
+                        if(m_statArray.isInverseSubFilter() == data.isWinnerPassFilter(value, colIndex)) {
                             tmpData.push_back(data);
                         }
                     }
