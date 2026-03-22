@@ -47,6 +47,15 @@ namespace view
         connect(m_ui->m_reset, &QPushButton::clicked, this, &StatArray::resetSubFilter);
         connect(m_ui->m_changeStatBtn, &QPushButton::clicked, this, &StatArray::changeStatFilter);
         connect(m_ui->m_changeStatBtn2, &QPushButton::clicked, this, &StatArray::changeStatFilter2);
+        connect(m_ui->m_startCompo, &QPushButton::clicked, this, [this]() {
+            QItemSelectionModel* selectionModel = m_ui->m_statDatas->selectionModel();
+            if(nullptr != selectionModel) {
+                emit startComposition(selectionModel->selectedIndexes());
+            } else {
+                qWarning() << "Selection model is null";
+            }
+
+        });
     }
 
     //-------------------------------------------
@@ -147,6 +156,25 @@ namespace view
                 newItemSelection->select(index, QItemSelectionModel::Select);
             }
         }
+    }
+
+    //-------------------------------------------
+    void StatArray::displayComposition(const Composition& p_compositionToDisplay)
+    //-------------------------------------------
+    {
+        QString keepToDisplay = "Courses gardées: chiffre: " + QString::number(p_compositionToDisplay.number) + ", colonne: " + p_compositionToDisplay.column + " --------------- ";
+        QString removeToDisplay = "Courses non gardées: chiffre: " + QString::number(p_compositionToDisplay.number) + ", colonne: " + p_compositionToDisplay.column + " --------------- ";
+
+        for(const std::pair<QString, int> datas: p_compositionToDisplay.keepComposition) {
+            keepToDisplay += datas.first + ": " + QString::number(datas.second) + ", ";
+        }
+        keepToDisplay += "\n";
+        for(const std::pair<QString, int> datas: p_compositionToDisplay.removedComposition) {
+            removeToDisplay += datas.first + ": " + QString::number(datas.second) + ", ";
+        }
+
+        const QString finalString = keepToDisplay + removeToDisplay;
+        m_ui->m_composition->setText(finalString);
     }
 
     //-------------------------------------------

@@ -43,28 +43,28 @@ public:
      * @param p_number: The number to test.
      * @return True if it's a prime number, false otherwise.
      */
-    static bool isP(const uint16_t p_number);
+    static bool isP(const uint p_number);
 
     /**
      * @brief Returns true if p_number is divided by 3.
      * @param p_number: The number to test.
      * @return True if p_number is divided by 3, false otherwise.
      */
-    static bool is3(const uint16_t p_number);
+    static bool is3(const uint p_number);
 
     /**
      * @brief Returns true if p_number is divided by 4.
      * @param p_number: The number to test.
      * @return True if p_number is divided by 4, false otherwise.
      */
-    static bool is4(const uint16_t p_number);
+    static bool is4(const uint p_number);
 
     /**
      * @brief Remove duplicates from an array and sort it in descending order.
      * @param p_input: The input array of 8 uint16_t values.
      * @return A new array with duplicates removed and sorted in descending order.
      */
-    static std::array<uint16_t, 8> removeDuplicatesAndSortDesc(const std::array<uint16_t, 8>& p_input);
+    static std::array<uint, 8> removeDuplicatesAndSortDesc(const std::array<uint, 8>& p_input);
 
     /**
      * @brief Converts the color enum value into a string.

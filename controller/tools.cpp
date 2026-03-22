@@ -70,38 +70,40 @@ const std::string Tools::convertTypeToString(const EType p_type)
 }
 
 //------------------------------------------------------------------------------
-bool Tools::isP(const uint16_t p_number)
+bool Tools::isP(const uint p_number)
 //------------------------------------------------------------------------------
 {
     if(0 == (p_number % 2)) return false;
-    for(uint16_t i = 3; i* i <= p_number; i+= 2)
+    for(uint i = 3; i* i <= p_number; i+= 2)
     {
-        if(0 == (p_number % i)) return false;
+        if(0 == (p_number % i)) {
+            return false;
+        }
     }
     return true;
 }
 
 //------------------------------------------------------------------------------
-bool Tools::is3(const uint16_t p_number)
+bool Tools::is3(const uint p_number)
 //------------------------------------------------------------------------------
 {
     return (0 == (p_number % 3));
 }
 
 //------------------------------------------------------------------------------
-bool Tools::is4(const uint16_t p_number)
+bool Tools::is4(const uint p_number)
 //------------------------------------------------------------------------------
 {
     return (0 == (p_number % 4));
 }
 
 //------------------------------------------------------------------------------
-std::array<uint16_t, 8> Tools::removeDuplicatesAndSortDesc(const std::array<uint16_t, 8>& p_input)
+std::array<uint, 8> Tools::removeDuplicatesAndSortDesc(const std::array<uint, 8>& p_input)
 //------------------------------------------------------------------------------
 {
-    std::array<uint16_t, 8> result = p_input;
+    std::array<uint, 8> result = p_input;
     // Sort in descending order
-    std::sort(result.begin(), result.end(), std::greater<uint16_t>());
+    std::sort(result.begin(), result.end(), std::greater<uint>());
     // Remove duplicate values
     auto last = std::unique(result.begin(), result.end());
     // Fill rest with 0 (if needed)

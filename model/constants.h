@@ -8,8 +8,8 @@
 // Qt includes
 #include <QDebug>
 
-static uint8_t const MIN_HORSE_NUMBER = 1; //!< Minimum horse number.
-static uint8_t const MAX_HORSE_NUMBER = 18; //!< Maximum horse number.
+static uint const MIN_HORSE_NUMBER = 1; //!< Minimum horse number.
+static uint const MAX_HORSE_NUMBER = 18; //!< Maximum horse number.
 
 static QString const GREEN_COLOR = "#81d41a"; //!< Green color in hex format.
 static QString const BLUE_COLOR = "#3365a4"; //!< Blue color in hex format.

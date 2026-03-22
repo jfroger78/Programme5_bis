@@ -452,7 +452,7 @@ namespace view {
         for(int column = 0; column < p_model->columnCount(); ++column)
         {
             valueZeroTreat = false;
-            std::array<uint16_t, 8> columnData = {0, 0, 0, 0, 0, 0, 0};
+            std::array<uint, 8> columnData = {0, 0, 0, 0, 0, 0, 0};
             for(int row = 0; row < p_model->rowCount(); ++row)
             {
                 QStandardItem* item = p_model->item(row, column);

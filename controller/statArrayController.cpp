@@ -26,6 +26,7 @@ namespace controller
     {
         connect(&m_statArray, &view::StatArray::startSubFilter, this, &StatArrayController::onStartSubFilter);
         connect(&m_statArray, &view::StatArray::resetSubFilter, this, &StatArrayController::onResetSubFilter);
+        connect(&m_statArray, &view::StatArray::startComposition, this, &StatArrayController::onStartComposition);
     }
 
     //--------------------------------------------------------------------------------
@@ -363,6 +364,9 @@ namespace controller
     const StatisticsData StatArrayController::generateStatistics(const std::vector<RaceData>& p_filteredDatas)
     //--------------------------------------------------------------------------------
     {
+        m_tmpFilteredDatas = p_filteredDatas;
+        m_tmpFilteredDatasByColorsByColumn = {};
+        m_tmpFilteredDatasByNumbers.clear();
         StatisticsData result;
         result = findRowNumbers();
         result.total = p_filteredDatas.size();
@@ -387,6 +391,9 @@ namespace controller
     const StatisticsData StatArrayController::generateStatistics(const std::array<std::vector<RaceData>, 24>& p_filteredDatas)
     //--------------------------------------------------------------------------------
     {
+        m_tmpFilteredDatas.clear();
+        m_tmpFilteredDatasByColorsByColumn = p_filteredDatas;
+        m_tmpFilteredDatasByNumbers.clear();
         StatisticsData result;
         result = findRowNumbers();
 
@@ -419,6 +426,9 @@ namespace controller
         const std::map<int, std::array<std::vector<RaceData>, 24>>& p_filteredDatas)
     //--------------------------------------------------------------------------------
     {
+        m_tmpFilteredDatas.clear();
+        m_tmpFilteredDatasByColorsByColumn = {};
+        m_tmpFilteredDatasByNumbers = p_filteredDatas;
         StatisticsData result;
         result = findRowNumbers();
 
@@ -563,6 +573,105 @@ namespace controller
         }
         
         m_statArray.displayDatas(statistics);
+    }
+
+    //--------------------------------------------------------------------------------
+    void StatArrayController::onStartComposition(const QModelIndexList& p_filterList)
+    //--------------------------------------------------------------------------------
+    {
+        std::vector<int> keepRaces = {};
+        std::vector<int> removeRaces = {};
+        Composition currentComposition;
+        for(const QModelIndex& modelIndex: p_filterList)
+        {
+            const int rowIndex = modelIndex.row();
+            const int colIndex = modelIndex.column();
+
+            const int rowNumber = statArrayHMI().model()->headerData(rowIndex, Qt::Vertical).toInt();
+            const QString colHeader = statArrayHMI().model()->headerData(colIndex, Qt::Horizontal).toString();
+            
+            currentComposition.number = rowNumber;
+            if((!colHeader.isEmpty()) && (" " != colHeader)) {
+                currentComposition.column = colHeader;
+            } else if((2 == colIndex) || (10 == colIndex) || (18 == colIndex)) {
+                currentComposition.column = "3";
+            } else if((4 == colIndex) || (12 == colIndex) || (20 == colIndex)) {
+                currentComposition.column = "4";
+            }
+
+            if(!m_tmpFilteredDatas.empty()) {
+                for(const RaceData& data: m_tmpFilteredDatas) {
+                    if(data.isWinnerPassFilter(rowNumber, colIndex)) {
+                        keepRaces.push_back(data.winner);
+                    } else {
+                        removeRaces.push_back(data.winner);
+                    }
+                }
+            } else if(!m_tmpFilteredDatasByColorsByColumn.empty()) {
+                std::vector<RaceData> currentColDatas = m_tmpFilteredDatasByColorsByColumn[colIndex];
+                for(const RaceData& data: currentColDatas) {
+                    if(data.isWinnerPassFilter(rowNumber, colIndex)) {
+                        keepRaces.push_back(data.winner);
+                    } else {
+                        removeRaces.push_back(data.winner);
+                    }
+                }
+            } else if(!m_tmpFilteredDatasByNumbers.empty()) {
+                const std::map<int, std::array<std::vector<RaceData>, 24>>::iterator it = m_tmpFilteredDatasByNumbers.find(rowNumber);
+                if(m_tmpFilteredDatasByNumbers.end() != it) {
+                    std::vector<RaceData> datas = it->second[colIndex];
+                    for(const RaceData& data: datas) {
+                        if(data.isWinnerPassFilter(rowNumber, colIndex)) {
+                            keepRaces.push_back(data.winner);
+                        } else {
+                            removeRaces.push_back(data.winner);
+                        }
+                    }
+                }
+            }
+        }
+
+        
+        for(const int number: keepRaces) {
+            if(Tools::isP(number)) {
+                currentComposition.incrementKeepType("P");
+                continue;
+            }
+
+            bool isSometing = false;
+            if(Tools::is3(number)) {
+                currentComposition.incrementKeepType("3");
+                isSometing = true;
+            }
+            if(Tools::is4(number)) {
+                currentComposition.incrementKeepType("4");
+                isSometing = true;
+            }
+            if(!isSometing) {
+                currentComposition.incrementKeepType("N");
+            }
+        }
+        for(const int number: removeRaces) {
+            if(Tools::isP(number)) {
+                currentComposition.incrementRemovedType("P");
+                continue;
+            }
+
+            bool isSometing = false;
+            if(Tools::is3(number)) {
+                currentComposition.incrementRemovedType("3");
+                isSometing = true;
+            }
+            if(Tools::is4(number)) {
+                currentComposition.incrementRemovedType("4");
+                isSometing = true;
+            }
+            if(!isSometing) {
+                currentComposition.incrementRemovedType("N");
+            }
+        }
+
+        m_statArray.displayComposition(currentComposition);
     }
 
     //--------------------------------------------------------------------------------

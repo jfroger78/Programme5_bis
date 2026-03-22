@@ -20,10 +20,10 @@
       <string>GroupBox</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="1" column="5">
-       <widget class="QLabel" name="m_total">
+      <item row="1" column="2">
+       <widget class="QPushButton" name="m_start">
         <property name="text">
-         <string/>
+         <string>Start</string>
         </property>
        </widget>
       </item>
@@ -34,13 +34,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
-       <widget class="QPushButton" name="m_reset">
-        <property name="text">
-         <string>Reset</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="4">
        <widget class="QLabel" name="m_totalLabel">
         <property name="text">
@@ -48,10 +41,27 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="m_start">
+      <item row="3" column="0" colspan="8">
+       <widget class="QTableView" name="m_statDatas"/>
+      </item>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="m_reset">
         <property name="text">
-         <string>Start</string>
+         <string>Reset</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="QLabel" name="m_total">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="m_activeSecondFilter">
+        <property name="text">
+         <string>Active filtre</string>
         </property>
        </widget>
       </item>
@@ -62,13 +72,20 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="8">
-       <widget class="QTableView" name="m_statDatas"/>
-      </item>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="m_activeSecondFilter">
+      <item row="2" column="0">
+       <widget class="QPushButton" name="m_startCompo">
         <property name="text">
-         <string>Active filtre</string>
+         <string>StartComposition</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="7">
+       <widget class="QLabel" name="m_composition">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

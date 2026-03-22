@@ -103,6 +103,12 @@ namespace view
             void displayDatas(const StatisticsData& p_datasToDisplay);
 
             /**
+             * @brief Displays composition of selected cell.
+             * @param p_composition The composition to display.
+             */
+            void displayComposition(const Composition& p_composition);
+
+            /**
              * @brief Changes the filter associated text to the other filter.
              */
             void changeFilterText();
@@ -155,6 +161,12 @@ namespace view
              * @brief Changes the second filter for the statistics.
              */
             Q_SIGNAL void changeStatFilter2();
+
+            /**
+             * @brief Starts the computation of the compisition of the selected cell.
+             * @param p_filterList: The list of cells selected by the user.
+             */
+            Q_SIGNAL void startComposition(const QModelIndexList& p_filterList);
 
         private:
             /**

@@ -255,14 +255,23 @@ namespace controller
             void onStartSubFilter(const QModelIndexList& p_filterList);
 
             /**
+             * @brief Starts the computation of the composition of the selected cell.
+             * @param p_filter: The filter fills by the user.
+             */
+            void onStartComposition(const QModelIndexList& p_filterList);
+
+            /**
              * @brief Triggers when user click on reset button.
              */
             void onResetSubFilter();
         private:
             std::vector<RaceData> m_fullDatas; //!< The full datas extract from DB.
             std::vector<RaceData> m_currentFilteredDatas; //!< The datas filter by the current used filter.
+            std::vector<RaceData> m_tmpFilteredDatas; //!< The filtered datas after a subfilter use for composition.
             std::array<std::vector<RaceData>, 24> m_currentFilteredDatasByColorsByColumn; //!< The datas filter by the current used filter by column.
+            std::array<std::vector<RaceData>, 24> m_tmpFilteredDatasByColorsByColumn; //!< The filtered datas after a subfilter use for composition.
             std::map<int, std::array<std::vector<RaceData>, 24>> m_currentFilteredDatasByNumbers; //!< The datas filter by the color row and by column.
+            std::map<int, std::array<std::vector<RaceData>, 24>> m_tmpFilteredDatasByNumbers; //!< The filtered datas after a subfilter use for composition.
 
             EFilter m_currentFilterType; //!< The current used filter to this array.
             EFilter m_filter1; //!< The first filter associated to this array.
