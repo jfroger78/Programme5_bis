@@ -538,31 +538,18 @@ namespace controller
                     const int rowIndex = modelIndex.row();
                     const int colIndex = modelIndex.column();
                     const int value = statArrayHMI().model()->headerData(rowIndex, Qt::Vertical).toInt();
-                    std::vector<RaceData> currentColDatas = {};
-                    /* QString currentColor = "";
-                    if((2 == rowIndex) && (datas.end() != datas.find("Green"))) {
-                        currentColDatas = datas.find("Green")->second[colIndex];
-                        currentColor = "Green";
-                    } else if((4 == rowIndex) && (datas.end() != datas.find("Blue"))) {
-                        currentColDatas = datas.find("Blue")->second[colIndex];
-                        currentColor = "Blue";
-                    } else if((5 == rowIndex) && (datas.end() != datas.find("Yellow"))) {
-                        currentColDatas = datas.find("Yellow")->second[colIndex];
-                        currentColor = "Yellow";
-                    } else if((6 == rowIndex) && (datas.end() != datas.find("Orange"))) {
-                        currentColDatas = datas.find("Orange")->second[colIndex];
-                        currentColor = "Orange";
-                    } else if((7 == rowIndex) && (datas.end() != datas.find("Blank"))) {
-                        currentColDatas = datas.find("Blank")->second[colIndex];
-                        currentColor = "Blank";
-                    }
-                    for(const RaceData& data: currentColDatas) {
-                        if(!data.isWinnerPassFilter(value, colIndex)) {
-                            tmpData.push_back(data);
+                    const std::map<int, std::array<std::vector<RaceData>, 24>>::iterator it = datas.find(value);
+                    if(datas.end() != it) {
+                        std::vector<RaceData> datasVec = it->second[colIndex];
+                        for(const RaceData& data: datasVec) {
+                            if(m_statArray.isInverseSubFilter() == data.isWinnerPassFilter(value, colIndex)) {
+                                tmpData.push_back(data);
+                            }
                         }
+                        datas[value][colIndex].clear();
+                        datas[value][colIndex] = tmpData;
+                        tmpData.clear();
                     }
-                    datas.find(currentColor)->second[colIndex].clear();
-                    datas.find(currentColor)->second[colIndex] = tmpData; */
                     tmpData.clear();
                 }
                 statistics = generateStatistics(datas);
